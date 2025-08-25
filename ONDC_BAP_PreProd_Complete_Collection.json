@@ -1,0 +1,896 @@
+{
+  "info": {
+    "name": "ONDC BAP Pre-Production Complete API Collection",
+    "description": "Complete API collection for ONDC BAP Pre-Production Testing (neo-server.rozana.in)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": {
+      "major": 2,
+      "minor": 0,
+      "patch": 0
+    }
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://neo-server.rozana.in",
+      "type": "string",
+      "description": "Production BAP URL"
+    },
+    {
+      "key": "local_url",
+      "value": "http://localhost:8000",
+      "type": "string",
+      "description": "Local development BAP URL"
+    },
+    {
+      "key": "subscriber_id",
+      "value": "neo-server.rozana.in",
+      "type": "string",
+      "description": "ONDC Subscriber ID"
+    },
+    {
+      "key": "domain",
+      "value": "ONDC:RET10",
+      "type": "string",
+      "description": "ONDC Domain (Retail)"
+    },
+    {
+      "key": "legacy_domain",
+      "value": "nic2004:52110",
+      "type": "string",
+      "description": "Legacy ONDC Domain Code"
+    },
+    {
+      "key": "preprod_registry",
+      "value": "https://preprod.registry.ondc.org",
+      "type": "string",
+      "description": "Pre-production ONDC Registry"
+    },
+    {
+      "key": "staging_registry",
+      "value": "https://staging.registry.ondc.org",
+      "type": "string",
+      "description": "Staging ONDC Registry"
+    },
+    {
+      "key": "pramaan_url",
+      "value": "https://pramaan.ondc.org",
+      "type": "string",
+      "description": "Pramaan eKYC Service URL"
+    },
+    {
+      "key": "transaction_id",
+      "value": "",
+      "type": "string",
+      "description": "Current transaction ID - will be auto-generated"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "exec": [
+          "// Generate UUID v4 for transaction_id if not already set",
+          "if (!pm.collectionVariables.get('transaction_id') || pm.collectionVariables.get('transaction_id') === '') {",
+          "    const uuid = require('uuid');",
+          "    const transactionId = uuid.v4();",
+          "    pm.collectionVariables.set('transaction_id', transactionId);",
+          "    console.log('Generated transaction_id:', transactionId);",
+          "}"
+        ],
+        "type": "text/javascript"
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Checks",
+      "item": [
+        {
+          "name": "Health Check (K8s)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/healthz",
+              "host": ["{{base_url}}"],
+              "path": ["healthz"]
+            },
+            "description": "Kubernetes-style health check endpoint"
+          }
+        },
+        {
+          "name": "Liveness Probe",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/livez",
+              "host": ["{{base_url}}"],
+              "path": ["livez"]
+            },
+            "description": "Liveness probe endpoint for container orchestration"
+          }
+        },
+        {
+          "name": "Readiness Probe",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/readyz",
+              "host": ["{{base_url}}"],
+              "path": ["readyz"]
+            },
+            "description": "Readiness probe endpoint for container orchestration"
+          }
+        },
+        {
+          "name": "Local BAP Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{local_url}}/health",
+              "host": ["{{local_url}}"],
+              "path": ["health"]
+            },
+            "description": "Local development BAP health check"
+          }
+        }
+      ],
+      "description": "Health check endpoints for monitoring and orchestration"
+    },
+    {
+      "name": "ONDC Subscription & Verification",
+      "item": [
+        {
+          "name": "Subscription Callback - Challenge",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"challenge\": \"test_challenge_{{$timestamp}}\",\n  \"subscriber_id\": \"{{subscriber_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/on_subscribe",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "on_subscribe"]
+            },
+            "description": "Test ONDC subscription challenge decryption"
+          }
+        },
+        {
+          "name": "Subscription Callback - Status",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"SUBSCRIBED\",\n  \"subscriber_id\": \"{{subscriber_id}}\",\n  \"timestamp\": \"{{$isoTimestamp}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/on_subscribe",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "on_subscribe"]
+            },
+            "description": "Test ONDC subscription status update"
+          }
+        },
+        {
+          "name": "Test Subscription Callback",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bap/on_subscribe/test",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "on_subscribe", "test"]
+            },
+            "description": "Test endpoint to verify callback URL accessibility"
+          }
+        },
+        {
+          "name": "Verification Page",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bap/verification",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "verification"]
+            },
+            "description": "HTML verification page for ONDC registration"
+          }
+        }
+      ],
+      "description": "ONDC subscription and verification endpoints"
+    },
+    {
+      "name": "ONDC Core Actions",
+      "item": [
+        {
+          "name": "Search",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"action\": \"search\",\n    \"version\": \"1.1.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\",\n    \"country\": \"IND\",\n    \"city\": \"std:080\",\n    \"ttl\": \"PT30S\"\n  },\n  \"message\": {\n    \"intent\": {\n      \"item\": {\n        \"descriptor\": {\n          \"name\": \"test product\"\n        }\n      },\n      \"fulfillment\": {\n        \"end\": {\n          \"location\": {\n            \"gps\": \"12.9716,77.5946\",\n            \"area_code\": \"560001\"\n          }\n        }\n      }\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/search",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "search"]
+            },
+            "description": "Search for products/services in ONDC network"
+          }
+        },
+        {
+          "name": "Select",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"action\": \"select\",\n    \"version\": \"1.1.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\",\n    \"country\": \"IND\",\n    \"city\": \"std:080\",\n    \"ttl\": \"PT30S\"\n  },\n  \"message\": {\n    \"order\": {\n      \"provider\": {\n        \"id\": \"provider_1\"\n      },\n      \"items\": [\n        {\n          \"id\": \"item_1\",\n          \"quantity\": {\n            \"count\": 1\n          }\n        }\n      ]\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/select",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "select"]
+            },
+            "description": "Select specific items from search results"
+          }
+        },
+        {
+          "name": "Init",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"action\": \"init\",\n    \"version\": \"1.1.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\",\n    \"country\": \"IND\",\n    \"city\": \"std:080\",\n    \"ttl\": \"PT30S\"\n  },\n  \"message\": {\n    \"order\": {\n      \"provider\": {\n        \"id\": \"provider_1\"\n      },\n      \"items\": [\n        {\n          \"id\": \"item_1\",\n          \"quantity\": {\n            \"count\": 1\n          }\n        }\n      ],\n      \"billing\": {\n        \"name\": \"John Doe\",\n        \"phone\": \"9876543210\",\n        \"email\": \"john.doe@example.com\",\n        \"address\": {\n          \"name\": \"Test Address\",\n          \"building\": \"123 Test Building\",\n          \"locality\": \"Test Locality\",\n          \"city\": \"Bengaluru\",\n          \"state\": \"Karnataka\",\n          \"country\": \"IND\",\n          \"area_code\": \"560001\"\n        }\n      },\n      \"fulfillments\": [\n        {\n          \"end\": {\n            \"contact\": {\n              \"phone\": \"9876543210\"\n            },\n            \"location\": {\n              \"address\": {\n                \"name\": \"Delivery Address\",\n                \"building\": \"123 Delivery Building\",\n                \"locality\": \"Delivery Locality\",\n                \"city\": \"Bengaluru\",\n                \"state\": \"Karnataka\",\n                \"country\": \"IND\",\n                \"area_code\": \"560001\"\n              },\n              \"gps\": \"12.9716,77.5946\"\n            }\n          }\n        }\n      ]\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/init",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "init"]
+            },
+            "description": "Initialize order with billing and fulfillment details"
+          }
+        },
+        {
+          "name": "Confirm",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"action\": \"confirm\",\n    \"version\": \"1.1.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\",\n    \"country\": \"IND\",\n    \"city\": \"std:080\",\n    \"ttl\": \"PT30S\"\n  },\n  \"message\": {\n    \"order\": {\n      \"id\": \"order_{{$timestamp}}\",\n      \"status\": \"Created\",\n      \"provider\": {\n        \"id\": \"provider_1\"\n      },\n      \"items\": [\n        {\n          \"id\": \"item_1\",\n          \"quantity\": {\n            \"count\": 1\n          }\n        }\n      ],\n      \"payment\": {\n        \"type\": \"PRE-FULFILLMENT\",\n        \"collected_by\": \"BAP\"\n      }\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/confirm",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "confirm"]
+            },
+            "description": "Confirm the order placement"
+          }
+        },
+        {
+          "name": "Status",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"action\": \"status\",\n    \"version\": \"1.1.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\",\n    \"country\": \"IND\",\n    \"city\": \"std:080\",\n    \"ttl\": \"PT30S\"\n  },\n  \"message\": {\n    \"order_id\": \"order_123\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/status",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "status"]
+            },
+            "description": "Get status of an existing order"
+          }
+        },
+        {
+          "name": "Track",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"action\": \"track\",\n    \"version\": \"1.1.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\",\n    \"country\": \"IND\",\n    \"city\": \"std:080\",\n    \"ttl\": \"PT30S\"\n  },\n  \"message\": {\n    \"order_id\": \"order_123\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/track",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "track"]
+            },
+            "description": "Track delivery status of an order"
+          }
+        },
+        {
+          "name": "Cancel",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"action\": \"cancel\",\n    \"version\": \"1.1.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\",\n    \"country\": \"IND\",\n    \"city\": \"std:080\",\n    \"ttl\": \"PT30S\"\n  },\n  \"message\": {\n    \"order_id\": \"order_123\",\n    \"cancellation_reason_id\": \"001\",\n    \"descriptor\": {\n      \"name\": \"Customer requested cancellation\"\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/cancel",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "cancel"]
+            },
+            "description": "Cancel an existing order"
+          }
+        },
+        {
+          "name": "Rating",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"action\": \"rating\",\n    \"version\": \"1.1.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\",\n    \"country\": \"IND\",\n    \"city\": \"std:080\",\n    \"ttl\": \"PT30S\"\n  },\n  \"message\": {\n    \"rating_category\": \"Order\",\n    \"id\": \"order_123\",\n    \"value\": \"5\",\n    \"feedback_form\": [\n      {\n        \"question\": \"How was your overall experience?\",\n        \"answer\": \"Excellent service and quick delivery\"\n      }\n    ]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/rating",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "rating"]
+            },
+            "description": "Submit rating and feedback for an order"
+          }
+        },
+        {
+          "name": "Support",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"action\": \"support\",\n    \"version\": \"1.1.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\",\n    \"country\": \"IND\",\n    \"city\": \"std:080\",\n    \"ttl\": \"PT30S\"\n  },\n  \"message\": {\n    \"support\": {\n      \"order_id\": \"order_123\",\n      \"issue\": \"Product not delivered\",\n      \"category\": \"DELIVERY\",\n      \"priority\": \"HIGH\",\n      \"contact\": {\n        \"phone\": \"9876543210\",\n        \"email\": \"customer@example.com\"\n      }\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/support",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "support"]
+            },
+            "description": "Request support for order-related issues"
+          }
+        }
+      ],
+      "description": "Core ONDC transaction flow endpoints"
+    },
+    {
+      "name": "eKYC Services",
+      "item": [
+        {
+          "name": "eKYC Search Providers",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"country\": \"IND\",\n    \"city\": \"std:080\",\n    \"action\": \"search\",\n    \"core_version\": \"1.2.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\",\n    \"ttl\": \"PT30S\"\n  },\n  \"message\": {\n    \"intent\": {\n      \"category\": {\n        \"descriptor\": {\n          \"name\": \"eKYC Services\"\n        }\n      },\n      \"fulfillment\": {\n        \"customer\": {\n          \"contact\": {\n            \"phone\": \"9876543210\"\n          }\n        }\n      }\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/ekyc/search",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "ekyc", "search"]
+            },
+            "description": "Search for available eKYC service providers"
+          }
+        },
+        {
+          "name": "eKYC Select Provider",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"country\": \"IND\",\n    \"city\": \"std:080\",\n    \"action\": \"select\",\n    \"core_version\": \"1.2.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\",\n    \"ttl\": \"PT30S\"\n  },\n  \"message\": {\n    \"order\": {\n      \"provider\": {\n        \"id\": \"pramaan.ondc.org\"\n      },\n      \"items\": [\n        {\n          \"id\": \"ekyc_verification\",\n          \"category_id\": \"eKYC\"\n        }\n      ]\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/ekyc/select",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "ekyc", "select"]
+            },
+            "description": "Select an eKYC service provider"
+          }
+        },
+        {
+          "name": "eKYC Initiate Verification",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"country\": \"IND\",\n    \"city\": \"std:080\",\n    \"action\": \"initiate\",\n    \"core_version\": \"1.2.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\",\n    \"ttl\": \"PT30S\"\n  },\n  \"message\": {\n    \"init\": {\n      \"requester\": {\n        \"type\": \"CONSUMER\",\n        \"id\": \"customer_{{$timestamp}}\"\n      },\n      \"provider\": {\n        \"id\": \"pramaan.ondc.org\"\n      },\n      \"purpose\": {\n        \"text\": \"Account verification for ONDC services\",\n        \"code\": \"ACCOUNT_VERIFICATION\"\n      },\n      \"auth\": {\n        \"type\": \"OTP\"\n      },\n      \"documents\": [\n        {\n          \"type\": \"AADHAAR\",\n          \"required\": true\n        }\n      ]\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/ekyc/initiate",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "ekyc", "initiate"]
+            },
+            "description": "Initiate eKYC verification process"
+          }
+        },
+        {
+          "name": "eKYC Verify OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"country\": \"IND\",\n    \"city\": \"std:080\",\n    \"action\": \"verify\",\n    \"core_version\": \"1.2.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\",\n    \"ttl\": \"PT30S\"\n  },\n  \"message\": {\n    \"transaction_id\": \"ekyc_txn_123\",\n    \"verification\": {\n      \"otp\": \"123456\",\n      \"document_number\": \"XXXX-XXXX-1234\"\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/ekyc/verify",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "ekyc", "verify"]
+            },
+            "description": "Verify OTP and complete eKYC process"
+          }
+        },
+        {
+          "name": "eKYC Check Status",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"country\": \"IND\",\n    \"city\": \"std:080\",\n    \"action\": \"status\",\n    \"core_version\": \"1.2.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\",\n    \"ttl\": \"PT30S\"\n  },\n  \"message\": {\n    \"transaction_id\": \"ekyc_txn_123\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/ekyc/status",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "ekyc", "status"]
+            },
+            "description": "Check status of eKYC verification"
+          }
+        },
+        {
+          "name": "eKYC Track Transaction",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bap/ekyc/track/ekyc_txn_123",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "ekyc", "track", "ekyc_txn_123"]
+            },
+            "description": "Track eKYC transaction status (web interface)"
+          }
+        },
+        {
+          "name": "List All eKYC Transactions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bap/ekyc/transactions",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "ekyc", "transactions"]
+            },
+            "description": "List all eKYC transactions (admin endpoint)"
+          }
+        }
+      ],
+      "description": "eKYC (Electronic Know Your Customer) service endpoints"
+    },
+    {
+      "name": "ONDC Onboarding & Registry",
+      "item": [
+        {
+          "name": "Get Onboarding Checklist",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bap/onboarding/checklist",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "onboarding", "checklist"]
+            },
+            "description": "Get comprehensive onboarding requirements and status"
+          }
+        },
+        {
+          "name": "Get Subscriber Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bap/onboarding/subscriber-info",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "onboarding", "subscriber-info"]
+            },
+            "description": "Get current subscriber information and status"
+          }
+        },
+        {
+          "name": "Generate ONDC Keys",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bap/onboarding/generate-keys",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "onboarding", "generate-keys"]
+            },
+            "description": "Generate Ed25519 signing keys and X25519 encryption keys"
+          }
+        },
+        {
+          "name": "Get Registration Payload",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bap/onboarding/registration-payload",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "onboarding", "registration-payload"]
+            },
+            "description": "Generate registration payload for ONDC registry"
+          }
+        },
+        {
+          "name": "Get Subscribe Payload - PreProd Buyer App",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bap/onboarding/subscribe-payload/pre_prod/1",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "onboarding", "subscribe-payload", "pre_prod", "1"]
+            },
+            "description": "Generate pre-production subscribe payload for Buyer App (ops_no=1)"
+          }
+        },
+        {
+          "name": "Get Subscribe Payload - Staging Buyer App",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bap/onboarding/subscribe-payload/staging/1",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "onboarding", "subscribe-payload", "staging", "1"]
+            },
+            "description": "Generate staging subscribe payload for Buyer App (ops_no=1)"
+          }
+        },
+        {
+          "name": "Test Challenge Decryption",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bap/onboarding/test-challenge",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "onboarding", "test-challenge"]
+            },
+            "description": "Test ONDC challenge decryption functionality"
+          }
+        },
+        {
+          "name": "Register with Registry",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bap/onboarding/register",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "onboarding", "register"]
+            },
+            "description": "Automatically register with ONDC registry"
+          }
+        },
+        {
+          "name": "Lookup Subscriber",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bap/onboarding/lookup/{{subscriber_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "onboarding", "lookup", "{{subscriber_id}}"]
+            },
+            "description": "Lookup subscriber in ONDC registry"
+          }
+        },
+        {
+          "name": "Update Subscriber Status",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bap/onboarding/status/SUBSCRIBED",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "onboarding", "status", "SUBSCRIBED"]
+            },
+            "description": "Update subscriber status in registry"
+          }
+        }
+      ],
+      "description": "ONDC onboarding and registry management endpoints"
+    },
+    {
+      "name": "Registry Direct Testing",
+      "item": [
+        {
+          "name": "PreProd Registry Subscribe",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subscriber_id\": \"{{subscriber_id}}\",\n  \"subscriber_url\": \"{{base_url}}\",\n  \"callback_url\": \"/v1/bap\",\n  \"signing_public_key\": \"QfhgZ30kF6m6aj6gjpvFl2NsdSaV2AfGDNvs9Sqbdl0=\",\n  \"encryption_public_key\": \"MCowBQYDK2VuAyEAYyPyJR9s9pzfzVPY0+P/X4mxPKPvS5RnGgFkqSLc+mM=\",\n  \"unique_key_id\": \"key_1755737751\",\n  \"request_id\": \"0102552d-98dc-49de-b6f1-e378bbe2c65d\",\n  \"timestamp\": \"{{$isoTimestamp}}\",\n  \"network_participant\": [\n    {\n      \"subscriber_url\": \"{{base_url}}\",\n      \"domain\": \"{{domain}}\",\n      \"type\": \"buyerApp\",\n      \"msn\": false,\n      \"country\": \"IND\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{preprod_registry}}/ondc/subscribe",
+              "host": ["{{preprod_registry}}"],
+              "path": ["ondc", "subscribe"]
+            },
+            "description": "Direct registration with pre-production ONDC registry"
+          }
+        },
+        {
+          "name": "Staging Registry Subscribe",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subscriber_id\": \"{{subscriber_id}}\",\n  \"subscriber_url\": \"{{base_url}}\",\n  \"callback_url\": \"/v1/bap\",\n  \"signing_public_key\": \"QfhgZ30kF6m6aj6gjpvFl2NsdSaV2AfGDNvs9Sqbdl0=\",\n  \"encryption_public_key\": \"MCowBQYDK2VuAyEAYyPyJR9s9pzfzVPY0+P/X4mxPKPvS5RnGgFkqSLc+mM=\",\n  \"unique_key_id\": \"key_1755737751\",\n  \"request_id\": \"0102552d-98dc-49de-b6f1-e378bbe2c65d\",\n  \"timestamp\": \"{{$isoTimestamp}}\",\n  \"network_participant\": [\n    {\n      \"subscriber_url\": \"{{base_url}}\",\n      \"domain\": \"{{domain}}\",\n      \"type\": \"buyerApp\",\n      \"msn\": false,\n      \"country\": \"IND\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{staging_registry}}/subscribe",
+              "host": ["{{staging_registry}}"],
+              "path": ["subscribe"]
+            },
+            "description": "Direct registration with staging ONDC registry"
+          }
+        },
+        {
+          "name": "PreProd Registry Lookup",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subscriber_id\": \"{{subscriber_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{preprod_registry}}/ondc/lookup",
+              "host": ["{{preprod_registry}}"],
+              "path": ["ondc", "lookup"]
+            },
+            "description": "Lookup subscriber in pre-production registry"
+          }
+        },
+        {
+          "name": "Staging Registry Lookup",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subscriber_id\": \"{{subscriber_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{staging_registry}}/ondc/lookup",
+              "host": ["{{staging_registry}}"],
+              "path": ["ondc", "lookup"]
+            },
+            "description": "Lookup subscriber in staging registry"
+          }
+        },
+        {
+          "name": "PreProd Registry Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{preprod_registry}}/health",
+              "host": ["{{preprod_registry}}"],
+              "path": ["health"]
+            },
+            "description": "Check pre-production registry health"
+          }
+        },
+        {
+          "name": "Staging Registry Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{staging_registry}}/health",
+              "host": ["{{staging_registry}}"],
+              "path": ["health"]
+            },
+            "description": "Check staging registry health"
+          }
+        }
+      ],
+      "description": "Direct ONDC registry testing endpoints"
+    },
+    {
+      "name": "Pramaan eKYC Testing",
+      "item": [
+        {
+          "name": "Pramaan Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{pramaan_url}}/health",
+              "host": ["{{pramaan_url}}"],
+              "path": ["health"]
+            },
+            "description": "Check Pramaan service health"
+          }
+        },
+        {
+          "name": "Pramaan eKYC Search",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"country\": \"IND\",\n    \"city\": \"std:080\",\n    \"action\": \"search\",\n    \"core_version\": \"1.2.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\",\n    \"ttl\": \"PT30S\"\n  },\n  \"message\": {\n    \"intent\": {\n      \"category\": {\n        \"descriptor\": {\n          \"name\": \"eKYC Services\"\n        }\n      }\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{pramaan_url}}/ekyc/search",
+              "host": ["{{pramaan_url}}"],
+              "path": ["ekyc", "search"]
+            },
+            "description": "Search eKYC services directly from Pramaan"
+          }
+        },
+        {
+          "name": "Pramaan eKYC Initiate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"country\": \"IND\",\n    \"city\": \"std:080\",\n    \"action\": \"initiate\",\n    \"core_version\": \"1.2.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\",\n    \"ttl\": \"PT30S\"\n  },\n  \"message\": {\n    \"init\": {\n      \"requester\": {\n        \"type\": \"CONSUMER\",\n        \"id\": \"customer_{{$timestamp}}\"\n      },\n      \"purpose\": {\n        \"text\": \"ONDC account verification\",\n        \"code\": \"ACCOUNT_VERIFICATION\"\n      },\n      \"auth\": {\n        \"type\": \"OTP\"\n      },\n      \"documents\": [\n        {\n          \"type\": \"AADHAAR\",\n          \"required\": true\n        }\n      ]\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{pramaan_url}}/ekyc/initiate",
+              "host": ["{{pramaan_url}}"],
+              "path": ["ekyc", "initiate"]
+            },
+            "description": "Initiate eKYC directly with Pramaan"
+          }
+        }
+      ],
+      "description": "Direct Pramaan eKYC service testing"
+    }
+  ]
+}

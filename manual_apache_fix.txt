@@ -1,0 +1,161 @@
+MANUAL APACHE FIX COMMANDS
+=========================
+
+Run these commands on your Ubuntu server to fix all endpoints:
+
+1. BACKUP CURRENT CONFIG:
+sudo cp /etc/apache2/sites-available/neo-server.rozana.in.conf /etc/apache2/sites-available/neo-server.rozana.in.conf.backup.$(date +%Y%m%d_%H%M%S)
+
+2. EDIT APACHE CONFIG:
+sudo nano /etc/apache2/sites-available/neo-server.rozana.in.conf
+
+3. REPLACE THE ENTIRE CONTENT WITH:
+<VirtualHost *:80>
+    ServerName neo-server.rozana.in
+    Redirect permanent / https://neo-server.rozana.in/
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName neo-server.rozana.in
+    
+    # SSL Configuration
+    SSLEngine on
+    SSLCertificateFile /etc/letsencrypt/live/neo-server.rozana.in/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/neo-server.rozana.in/privkey.pem
+    
+    # Proxy FastAPI Application
+    ProxyPreserveHost On
+    
+    # Health endpoints
+    ProxyPass /healthz http://localhost:8000/healthz
+    ProxyPassReverse /healthz http://localhost:8000/healthz
+    
+    ProxyPass /livez http://localhost:8000/livez
+    ProxyPassReverse /livez http://localhost:8000/livez
+    
+    ProxyPass /readyz http://localhost:8000/readyz
+    ProxyPassReverse /readyz http://localhost:8000/readyz
+    
+    # ONDC endpoints - CRITICAL FOR LOOKUP
+    ProxyPass /lookup http://localhost:8000/lookup
+    ProxyPassReverse /lookup http://localhost:8000/lookup
+    
+    ProxyPass /vlookup http://localhost:8000/vlookup
+    ProxyPassReverse /vlookup http://localhost:8000/vlookup
+    
+    ProxyPass /on_subscribe http://localhost:8000/on_subscribe
+    ProxyPassReverse /on_subscribe http://localhost:8000/on_subscribe
+    
+    # ONDC Site Verification
+    ProxyPass /ondc-site-verification.html http://localhost:8000/ondc-site-verification.html
+    ProxyPassReverse /ondc-site-verification.html http://localhost:8000/ondc-site-verification.html
+    
+    # Onboarding endpoints
+    ProxyPass /onboarding http://localhost:8000/onboarding
+    ProxyPassReverse /onboarding http://localhost:8000/onboarding
+    
+    # Core action endpoints
+    ProxyPass /search http://localhost:8000/search
+    ProxyPassReverse /search http://localhost:8000/search
+    
+    ProxyPass /select http://localhost:8000/select
+    ProxyPassReverse /select http://localhost:8000/select
+    
+    ProxyPass /init http://localhost:8000/init
+    ProxyPassReverse /init http://localhost:8000/init
+    
+    ProxyPass /confirm http://localhost:8000/confirm
+    ProxyPassReverse /confirm http://localhost:8000/confirm
+    
+    ProxyPass /status http://localhost:8000/status
+    ProxyPassReverse /status http://localhost:8000/status
+    
+    ProxyPass /track http://localhost:8000/track
+    ProxyPassReverse /track http://localhost:8000/track
+    
+    ProxyPass /cancel http://localhost:8000/cancel
+    ProxyPassReverse /cancel http://localhost:8000/cancel
+    
+    ProxyPass /rating http://localhost:8000/rating
+    ProxyPassReverse /rating http://localhost:8000/rating
+    
+    ProxyPass /support http://localhost:8000/support
+    ProxyPassReverse /support http://localhost:8000/support
+    
+    # Logs
+    ErrorLog ${APACHE_LOG_DIR}/ondc-bap-error.log
+    CustomLog ${APACHE_LOG_DIR}/ondc-bap-access.log combined
+</VirtualHost>
+
+4. TEST CONFIG:
+sudo apache2ctl configtest
+
+5. RELOAD APACHE:
+sudo systemctl reload apache2
+
+6. RESTART FASTAPI SERVICE:
+sudo systemctl restart ondc-bap
+
+7. CHECK STATUS:
+sudo systemctl status apache2
+sudo systemctl status ondc-bap
+
+8. TEST ENDPOINTS:
+curl -s "https://neo-server.rozana.in/healthz"
+curl -s "https://neo-server.rozana.in/livez"
+curl -s "https://neo-server.rozana.in/lookup"
+curl -s "https://neo-server.rozana.in/onboarding/checklist"
+
+QUICK ONE-LINER TO COPY-PASTE:
+==============================
+sudo cp /etc/apache2/sites-available/neo-server.rozana.in.conf /etc/apache2/sites-available/neo-server.rozana.in.conf.backup && sudo tee /etc/apache2/sites-available/neo-server.rozana.in.conf > /dev/null << 'EOF'
+<VirtualHost *:80>
+    ServerName neo-server.rozana.in
+    Redirect permanent / https://neo-server.rozana.in/
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName neo-server.rozana.in
+    SSLEngine on
+    SSLCertificateFile /etc/letsencrypt/live/neo-server.rozana.in/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/neo-server.rozana.in/privkey.pem
+    ProxyPreserveHost On
+    ProxyPass /healthz http://localhost:8000/healthz
+    ProxyPassReverse /healthz http://localhost:8000/healthz
+    ProxyPass /livez http://localhost:8000/livez
+    ProxyPassReverse /livez http://localhost:8000/livez
+    ProxyPass /readyz http://localhost:8000/readyz
+    ProxyPassReverse /readyz http://localhost:8000/readyz
+    ProxyPass /lookup http://localhost:8000/lookup
+    ProxyPassReverse /lookup http://localhost:8000/lookup
+    ProxyPass /vlookup http://localhost:8000/vlookup
+    ProxyPassReverse /vlookup http://localhost:8000/vlookup
+    ProxyPass /on_subscribe http://localhost:8000/on_subscribe
+    ProxyPassReverse /on_subscribe http://localhost:8000/on_subscribe
+    ProxyPass /ondc-site-verification.html http://localhost:8000/ondc-site-verification.html
+    ProxyPassReverse /ondc-site-verification.html http://localhost:8000/ondc-site-verification.html
+    ProxyPass /onboarding http://localhost:8000/onboarding
+    ProxyPassReverse /onboarding http://localhost:8000/onboarding
+    ProxyPass /search http://localhost:8000/search
+    ProxyPassReverse /search http://localhost:8000/search
+    ProxyPass /select http://localhost:8000/select
+    ProxyPassReverse /select http://localhost:8000/select
+    ProxyPass /init http://localhost:8000/init
+    ProxyPassReverse /init http://localhost:8000/init
+    ProxyPass /confirm http://localhost:8000/confirm
+    ProxyPassReverse /confirm http://localhost:8000/confirm
+    ProxyPass /status http://localhost:8000/status
+    ProxyPassReverse /status http://localhost:8000/status
+    ProxyPass /track http://localhost:8000/track
+    ProxyPassReverse /track http://localhost:8000/track
+    ProxyPass /cancel http://localhost:8000/cancel
+    ProxyPassReverse /cancel http://localhost:8000/cancel
+    ProxyPass /rating http://localhost:8000/rating
+    ProxyPassReverse /rating http://localhost:8000/rating
+    ProxyPass /support http://localhost:8000/support
+    ProxyPassReverse /support http://localhost:8000/support
+    ErrorLog ${APACHE_LOG_DIR}/ondc-bap-error.log
+    CustomLog ${APACHE_LOG_DIR}/ondc-bap-access.log combined
+</VirtualHost>
+EOF
+sudo apache2ctl configtest && sudo systemctl reload apache2 && sudo systemctl restart ondc-bap 

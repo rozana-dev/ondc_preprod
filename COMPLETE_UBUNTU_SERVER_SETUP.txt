@@ -1,0 +1,312 @@
+COMPLETE UBUNTU SERVER SETUP GUIDE FOR ONDC BAP
+================================================
+
+This guide will help you deploy your ONDC BAP application on Ubuntu server
+from start to finish. Follow each step in order.
+
+PREREQUISITES:
+- Ubuntu server with root/sudo access
+- Domain: neo-server.rozana.in
+- SSL certificate for your domain
+- Python 3.8+ installed
+
+STEP 1: SERVER PREREQUISITES
+----------------------------
+# Update system
+sudo apt update && sudo apt upgrade -y
+
+# Install required packages
+sudo apt install -y apache2 libapache2-mod-proxy-html python3 python3-pip python3-venv git curl jq
+
+# Enable Apache modules
+sudo a2enmod proxy
+sudo a2enmod proxy_http
+sudo a2enmod ssl
+sudo a2enmod rewrite
+
+# Restart Apache to apply module changes
+sudo systemctl restart apache2
+
+STEP 2: CREATE APPLICATION DIRECTORY
+-----------------------------------
+# Create application directory
+sudo mkdir -p /opt/ondc-bap
+sudo chown -R $USER:$USER /opt/ondc-bap
+cd /opt/ondc-bap
+
+STEP 3: UPLOAD YOUR APPLICATION
+-------------------------------
+# Option A: If you have files locally, upload them using scp
+# scp -r /path/to/your/app/* user@your-server:/opt/ondc-bap/
+
+# Option B: Clone from git (if you have a repository)
+# git clone <your-repo-url> /opt/ondc-bap
+
+# Option C: Copy files manually
+# Copy all your application files to /opt/ondc-bap/
+# Make sure to include:
+# - app/ directory
+# - requirements.txt
+# - scripts/ directory
+# - All other application files
+
+STEP 4: SETUP PYTHON ENVIRONMENT
+--------------------------------
+cd /opt/ondc-bap
+
+# Create virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Install dependencies
+pip install --upgrade pip
+pip install -r requirements.txt
+
+# Verify installation
+python -c "import fastapi; print('FastAPI installed successfully')"
+
+STEP 5: GENERATE ONDC KEYS
+--------------------------
+# Generate ONDC cryptographic keys
+python scripts/generate_ondc_keys.py
+
+# This will create:
+# - secrets/ondc_credentials.json
+# - ondc-site-verification.html
+
+# Verify files were created
+ls -la secrets/
+ls -la ondc-site-verification.html
+
+STEP 6: CREATE SYSTEMD SERVICE
+------------------------------
+# Create service file
+sudo nano /etc/systemd/system/ondc-bap.service
+
+# Add this content to the file:
+[Unit]
+Description=ONDC BAP FastAPI Application
+After=network.target
+
+[Service]
+Type=exec
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/ondc-bap
+Environment=PATH=/opt/ondc-bap/.venv/bin
+ExecStart=/opt/ondc-bap/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+
+# Save and exit (Ctrl+X, Y, Enter)
+
+STEP 7: SETUP APACHE CONFIGURATION
+----------------------------------
+# Create Apache site configuration
+sudo nano /etc/apache2/sites-available/neo-server.rozana.in.conf
+
+# Add this content to the file:
+<VirtualHost *:80>
+    ServerName neo-server.rozana.in
+    Redirect permanent / https://neo-server.rozana.in/
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName neo-server.rozana.in
+    
+    # SSL Configuration
+    SSLEngine on
+    SSLCertificateFile /etc/letsencrypt/live/neo-server.rozana.in/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/neo-server.rozana.in/privkey.pem
+    
+    # Proxy FastAPI Application
+    ProxyPreserveHost On
+    
+    # Health endpoints
+    ProxyPass /healthz http://localhost:8000/healthz
+    ProxyPassReverse /healthz http://localhost:8000/healthz
+    
+    ProxyPass /livez http://localhost:8000/livez
+    ProxyPassReverse /livez http://localhost:8000/livez
+    
+    ProxyPass /readyz http://localhost:8000/readyz
+    ProxyPassReverse /readyz http://localhost:8000/readyz
+    
+    # ONDC endpoints - CRITICAL FOR LOOKUP
+    ProxyPass /lookup http://localhost:8000/lookup
+    ProxyPassReverse /lookup http://localhost:8000/lookup
+    
+    ProxyPass /vlookup http://localhost:8000/vlookup
+    ProxyPassReverse /vlookup http://localhost:8000/vlookup
+    
+    ProxyPass /on_subscribe http://localhost:8000/on_subscribe
+    ProxyPassReverse /on_subscribe http://localhost:8000/on_subscribe
+    
+    # ONDC Site Verification
+    ProxyPass /ondc-site-verification.html http://localhost:8000/ondc-site-verification.html
+    ProxyPassReverse /ondc-site-verification.html http://localhost:8000/ondc-site-verification.html
+    
+    # Logs
+    ErrorLog ${APACHE_LOG_DIR}/ondc-bap-error.log
+    CustomLog ${APACHE_LOG_DIR}/ondc-bap-access.log combined
+</VirtualHost>
+
+# Save and exit (Ctrl+X, Y, Enter)
+
+STEP 8: ENABLE SITE AND START SERVICES
+--------------------------------------
+# Enable Apache site
+sudo a2ensite neo-server.rozana.in.conf
+
+# Disable default site (optional)
+sudo a2dissite 000-default.conf
+
+# Test Apache configuration
+sudo apache2ctl configtest
+
+# If test passes, set proper permissions
+sudo chown -R www-data:www-data /opt/ondc-bap
+sudo chmod -R 755 /opt/ondc-bap
+
+# Start and enable services
+sudo systemctl daemon-reload
+sudo systemctl enable ondc-bap
+sudo systemctl start ondc-bap
+sudo systemctl reload apache2
+
+STEP 9: VERIFY EVERYTHING IS WORKING
+------------------------------------
+# Check service status
+sudo systemctl status ondc-bap
+sudo systemctl status apache2
+
+# Check if FastAPI is running on port 8000
+sudo netstat -tlnp | grep :8000
+
+# Test endpoints locally first
+curl -s "http://localhost:8000/healthz"
+curl -s "http://localhost:8000/lookup"
+curl -s "http://localhost:8000/ondc-site-verification.html"
+
+# Test public endpoints
+curl -s "https://neo-server.rozana.in/healthz"
+curl -s "https://neo-server.rozana.in/lookup"
+curl -s "https://neo-server.rozana.in/ondc-site-verification.html"
+
+STEP 10: TEST ONDC ENDPOINTS
+----------------------------
+# Test lookup endpoint
+curl -s "https://neo-server.rozana.in/lookup" | jq .
+
+# Test vlookup endpoint
+curl -s -X POST "https://neo-server.rozana.in/vlookup" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sender_subscriber_id": "test.ondc.org",
+    "request_id": "test-123",
+    "timestamp": "2025-01-21T10:00:00.000Z",
+    "signature": "test",
+    "search_parameters": {
+      "country": "IND",
+      "domain": "nic2004:52110",
+      "type": "buyerApp",
+      "city": "011",
+      "subscriber_id": "neo-server.rozana.in"
+    }
+  }' | jq .
+
+# Test on_subscribe endpoint
+curl -s -X POST "https://neo-server.rozana.in/on_subscribe" \
+  -H "Content-Type: application/json" \
+  -d '{"test": "challenge"}' | jq .
+
+STEP 11: ONDC SITE VERIFICATION
+-------------------------------
+# Verify the ONDC site verification file is accessible
+curl -s "https://neo-server.rozana.in/ondc-site-verification.html"
+
+# Expected output should show the HTML with meta tag containing signed request ID
+
+STEP 12: SUBMIT ONDC REGISTRATION
+---------------------------------
+# Generate subscribe payload
+curl -s "https://neo-server.rozana.in/onboarding/subscribe-payload/pre_prod/1" | jq .
+
+# Use the generated payload to submit to ONDC registry
+# You'll need to get the correct payload format from ONDC support
+
+EXPECTED RESULTS AFTER SETUP:
+----------------------------
+✅ Health Check: {"status": "ok"}
+✅ Lookup Endpoint: Returns subscriber information
+✅ Vlookup Endpoint: Returns ONDC format responses
+✅ On Subscribe: Handles ONDC challenges
+✅ Site Verification: HTML file accessible
+
+TROUBLESHOOTING COMMANDS:
+------------------------
+# Check if FastAPI is running
+sudo netstat -tlnp | grep :8000
+
+# Check Apache configuration
+sudo apache2ctl configtest
+
+# Check service logs
+sudo journalctl -u ondc-bap -f
+
+# Check Apache logs
+sudo tail -f /var/log/apache2/ondc-bap-error.log
+
+# Restart services if needed
+sudo systemctl restart ondc-bap
+sudo systemctl reload apache2
+
+# Check file permissions
+ls -la /opt/ondc-bap/
+sudo chown -R www-data:www-data /opt/ondc-bap
+
+COMMON ISSUES AND SOLUTIONS:
+---------------------------
+1. Port 8000 already in use:
+   sudo lsof -i :8000
+   sudo kill -9 <PID>
+
+2. Apache configuration error:
+   sudo apache2ctl configtest
+   Check syntax in /etc/apache2/sites-available/neo-server.rozana.in.conf
+
+3. Permission denied:
+   sudo chown -R www-data:www-data /opt/ondc-bap
+   sudo chmod -R 755 /opt/ondc-bap
+
+4. Service not starting:
+   sudo journalctl -u ondc-bap -f
+   Check for Python import errors or missing dependencies
+
+5. 404 errors on public endpoints:
+   Verify Apache proxy configuration
+   Check if FastAPI is running on localhost:8000
+
+FINAL VERIFICATION CHECKLIST:
+----------------------------
+□ FastAPI application running on localhost:8000
+□ Apache proxy configuration working
+□ SSL certificate properly configured
+□ All endpoints accessible via HTTPS
+□ ONDC site verification file accessible
+□ Lookup endpoints returning proper responses
+□ On_subscribe endpoint handling challenges
+□ Systemd service auto-starting on boot
+
+NOTES:
+------
+- Keep your secrets/ondc_credentials.json secure
+- Monitor logs regularly: sudo tail -f /var/log/apache2/ondc-bap-error.log
+- Backup your configuration files
+- Update SSL certificates before expiration
+- Test endpoints after any configuration changes
+
+For ONDC registration support, contact ONDC support team with your subscriber_id: neo-server.rozana.in 

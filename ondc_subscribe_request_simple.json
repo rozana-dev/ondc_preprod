@@ -1,0 +1,8 @@
+{
+  "subscriber_id": "neo-server.rozana.in",
+  "callback_url": "/on_subscribe",
+  "subscriber_url": "https://neo-server.rozana.in",
+  "signing_public_key": "QfhgZ30kF6m6aj6gjpvFl2NsdSaV2AfGDNvs9Sqbdl0=",
+  "encryption_public_key": "MCowBQYDK2VuAyEAYyPyJR9s9pzfzVPY0+P/X4mxPKPvS5RnGgFkqSLc+mM=",
+  "unique_key_id": "1755737751"
+} 

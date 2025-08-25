@@ -1,0 +1,141 @@
+NEXT STEPS FOR ONDC ONBOARDING
+==============================
+
+CURRENT STATUS: ✅ Apache Configuration Fixed
+✅ All /onboarding/* endpoints are now accessible on https://neo-server.rozana.in
+
+TIMESTAMP: Thu Aug 21 17:36:12 IST 2025
+
+IMMEDIATE NEXT STEPS
+====================
+
+1. ✅ VERIFY ENDPOINT FUNCTIONALITY
+   - Test that all onboarding endpoints return actual data (not just status)
+   - Ensure cryptographic keys are properly generated
+   - Verify challenge decryption is working
+
+2. 🔧 FIX REMAINING ISSUES
+   - Fix /vlookup endpoint (still returning 404)
+   - Ensure all endpoints return full data instead of just status
+
+3. 📋 COMPLETE ONDC PREREQUISITES
+   - Host ondc-site-verification.html at domain root
+   - Get subscriber_id whitelisted at ONDC portal
+   - Verify all technical requirements are met
+
+4. 🚀 PROCEED WITH ONDC REGISTRATION
+   - Generate proper subscribe payload
+   - Submit to ONDC pre-production registry
+   - Handle ONDC challenge and verification
+
+DETAILED ACTION PLAN
+====================
+
+STEP 1: VERIFY ENDPOINT DATA (IMMEDIATE)
+----------------------------------------
+Test that endpoints return actual data:
+
+```bash
+# Test subscriber info
+curl -s "https://neo-server.rozana.in/onboarding/subscriber-info" | jq .
+
+# Test checklist
+curl -s "https://neo-server.rozana.in/onboarding/checklist" | jq .
+
+# Test subscribe payload
+curl -s "https://neo-server.rozana.in/onboarding/subscribe-payload/pre_prod/1" | jq .
+```
+
+STEP 2: FIX /VLOOKUP ENDPOINT
+-----------------------------
+The /vlookup endpoint is still returning 404. Need to:
+- Check if the endpoint exists in the FastAPI application
+- Ensure Apache proxy rule is correct
+- Test the endpoint functionality
+
+STEP 3: VERIFY CRYPTOGRAPHIC KEYS
+---------------------------------
+Ensure ONDC keys are properly generated and accessible:
+
+```bash
+# Test key generation
+curl -s -X POST "https://neo-server.rozana.in/onboarding/generate-keys" | jq .
+
+# Test challenge decryption
+curl -s -X POST "https://neo-server.rozana.in/onboarding/test-challenge" \
+  -H "Content-Type: application/json" \
+  -d '{"test": "challenge"}' | jq .
+```
+
+STEP 4: HOST SITE VERIFICATION FILE
+-----------------------------------
+Ensure ondc-site-verification.html is accessible at:
+https://neo-server.rozana.in/ondc-site-verification.html
+
+STEP 5: ONDC PORTAL WHITELISTING
+--------------------------------
+1. Visit https://portal.ondc.org
+2. Register/login to the portal
+3. Submit neo-server.rozana.in for whitelisting
+4. Wait for approval (usually 24-48 hours)
+
+STEP 6: GENERATE SUBSCRIBE PAYLOAD
+----------------------------------
+Use the onboarding endpoint to generate proper payload:
+
+```bash
+curl -s "https://neo-server.rozana.in/onboarding/subscribe-payload/pre_prod/1" | jq .
+```
+
+STEP 7: SUBMIT TO ONDC REGISTRY
+-------------------------------
+Submit the generated payload to ONDC pre-production registry:
+
+```bash
+# Use the payload from step 6
+curl -X POST "https://preprod.registry.ondc.org/ondc/subscribe" \
+  -H "Content-Type: application/json" \
+  -d @subscribe_payload.json
+```
+
+STEP 8: HANDLE ONDC CHALLENGE
+-----------------------------
+1. ONDC will send a challenge to your callback URL
+2. Your /on_subscribe endpoint will handle it
+3. Verify the challenge response is working
+
+STEP 9: VERIFY REGISTRATION
+---------------------------
+Check registration status in ONDC registry lookup:
+https://preprod.registry.ondc.org/ondc/lookup
+
+PRIORITY ORDER
+==============
+1. 🔥 IMMEDIATE: Fix endpoint data responses
+2. 🔥 IMMEDIATE: Fix /vlookup endpoint
+3. 🔥 HIGH: Verify cryptographic keys
+4. 🔥 HIGH: Test site verification file
+5. 🔥 HIGH: Generate and test subscribe payload
+6. 🔥 MEDIUM: Submit to ONDC registry
+7. 🔥 MEDIUM: Handle ONDC challenge
+8. 🔥 LOW: Verify final registration
+
+SUCCESS CRITERIA
+================
+✅ All /onboarding/* endpoints return full data
+✅ /vlookup endpoint works
+✅ Cryptographic keys are generated and accessible
+✅ Site verification file is hosted
+✅ Subscribe payload is generated correctly
+✅ ONDC registry accepts the registration
+✅ Challenge/response mechanism works
+✅ Registration appears in ONDC lookup
+
+READY TO PROCEED?
+=================
+The Apache configuration fix was successful! Now we need to:
+1. Verify the actual data responses
+2. Fix the remaining /vlookup issue
+3. Complete the ONDC onboarding process
+
+Would you like me to start with Step 1 (verifying endpoint data) or Step 2 (fixing /vlookup)? 

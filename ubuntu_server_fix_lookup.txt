@@ -1,0 +1,106 @@
+UBUNTU SERVER COMMANDS TO FIX LOOKUP ENDPOINTS
+==============================================
+
+Run these commands on your Ubuntu server one by one:
+
+1. CHECK CURRENT STATUS
+-----------------------
+# Check if FastAPI app is running
+sudo systemctl status ondc-bap
+
+# Check what's listening on port 8000
+sudo netstat -tlnp | grep :8000
+
+2. VIEW CURRENT APACHE CONFIGURATION
+-----------------------------------
+# View the current Apache config
+sudo cat /etc/apache2/sites-available/neo-server.rozana.in.conf
+
+3. BACKUP CURRENT CONFIG
+------------------------
+# Create a backup of current config
+sudo cp /etc/apache2/sites-available/neo-server.rozana.in.conf /etc/apache2/sites-available/neo-server.rozana.in.conf.backup
+
+4. EDIT APACHE CONFIGURATION
+----------------------------
+# Edit the Apache config file
+sudo nano /etc/apache2/sites-available/neo-server.rozana.in.conf
+
+IN THE NANO EDITOR:
+- Find the <VirtualHost *:443> section
+- Add these lines inside that section:
+
+# ONDC Lookup endpoints - ADD THESE LINES
+ProxyPass /lookup http://localhost:8000/lookup
+ProxyPassReverse /lookup http://localhost:8000/lookup
+
+ProxyPass /vlookup http://localhost:8000/vlookup
+ProxyPassReverse /vlookup http://localhost:8000/vlookup
+
+TO SAVE IN NANO:
+- Press Ctrl + X
+- Press Y to confirm
+- Press Enter to save
+
+5. TEST APACHE CONFIGURATION
+----------------------------
+# Test if the Apache config is valid
+sudo apache2ctl configtest
+
+6. RELOAD APACHE
+----------------
+# If config test passes, reload Apache
+sudo systemctl reload apache2
+
+7. RESTART FASTAPI APPLICATION
+------------------------------
+# Restart the FastAPI application
+sudo systemctl restart ondc-bap
+
+# Check if it's running properly
+sudo systemctl status ondc-bap
+
+8. TEST ENDPOINTS LOCALLY
+-------------------------
+# Test lookup endpoint locally
+curl -s http://localhost:8000/lookup
+
+# Test vlookup endpoint locally
+curl -s -X POST http://localhost:8000/vlookup -H "Content-Type: application/json" -d '{"test":"data"}'
+
+9. TEST ENDPOINTS THROUGH APACHE
+--------------------------------
+# Test lookup endpoint through Apache
+curl -s https://neo-server.rozana.in/lookup
+
+# Test vlookup endpoint through Apache
+curl -s -X POST https://neo-server.rozana.in/vlookup -H "Content-Type: application/json" -d '{"test":"data"}'
+
+10. CHECK LOGS (IF NEEDED)
+--------------------------
+# Check Apache error logs
+sudo tail -f /var/log/apache2/ondc-bap-error.log
+
+# Check FastAPI application logs
+sudo journalctl -u ondc-bap -f
+
+11. VERIFY IN BROWSER
+---------------------
+# After completing all steps, open your browser and go to:
+https://neo-server.rozana.in/lookup
+
+EXPECTED RESULTS:
+- Step 8 should return JSON data (not 404)
+- Step 9 should return JSON data (not 404)
+- Step 11 should show JSON in browser (not 404 error page)
+
+TROUBLESHOOTING:
+- If step 5 fails, check the Apache config syntax
+- If step 8 fails, the FastAPI app doesn't have the endpoints
+- If step 9 fails but step 8 works, Apache proxy is not configured correctly
+- If you see "Permission denied", use sudo before commands
+
+NOTES:
+- Make sure you're running these commands on the Ubuntu server (not locally)
+- The FastAPI app must be running on localhost:8000
+- Apache must have mod_proxy and mod_proxy_http enabled 

@@ -1,0 +1,54 @@
+# ONDC BAP Deployment Fix Commands
+# Run these commands directly on your server as root
+
+# Step 1: Create the missing directory structure
+mkdir -p /var/www/bap/app/api/v1
+mkdir -p /var/www/bap/app/core
+mkdir -p /var/www/bap/app/api
+mkdir -p /var/www/bap/secrets
+
+# Step 2: Set proper permissions
+chown -R www-data:www-data /var/www/bap
+chmod -R 755 /var/www/bap
+
+# Step 3: Copy the updated ondc_bap.py file
+cp /var/www/one_ondc/app/api/v1/ondc_bap.py /var/www/bap/app/api/v1/ondc_bap.py
+
+# Step 4: Copy other necessary files
+cp /var/www/one_ondc/app/api/v1/ekyc.py /var/www/bap/app/api/v1/ekyc.py
+cp /var/www/one_ondc/app/api/v1/__init__.py /var/www/bap/app/api/v1/__init__.py
+cp /var/www/one_ondc/app/api/__init__.py /var/www/bap/app/api/__init__.py
+cp /var/www/one_ondc/app/__init__.py /var/www/bap/app/__init__.py
+cp /var/www/one_ondc/app/main.py /var/www/bap/app/main.py
+
+# Step 5: Copy core modules
+cp /var/www/one_ondc/app/core/config.py /var/www/bap/app/core/config.py
+cp /var/www/one_ondc/app/core/ondc_crypto.py /var/www/bap/app/core/ondc_crypto.py
+cp /var/www/one_ondc/app/core/ondc_registry.py /var/www/bap/app/core/ondc_registry.py
+cp /var/www/one_ondc/app/core/org_config.py /var/www/bap/app/core/org_config.py
+cp /var/www/one_ondc/app/core/__init__.py /var/www/bap/app/core/__init__.py
+
+# Step 6: Copy other files
+cp /var/www/one_ondc/requirements.txt /var/www/bap/requirements.txt
+cp /var/www/one_ondc/ondc-site-verification.html /var/www/bap/ondc-site-verification.html
+
+# Step 7: Copy secrets if they exist
+if [ -f "/var/www/one_ondc/secrets/ondc_credentials.json" ]; then
+    cp /var/www/one_ondc/secrets/ondc_credentials.json /var/www/bap/secrets/ondc_credentials.json
+    chmod 600 /var/www/bap/secrets/ondc_credentials.json
+fi
+
+# Step 8: Verify the structure
+ls -la /var/www/bap/app/api/v1/
+ls -la /var/www/bap/app/core/
+
+# Step 9: Restart the service
+systemctl restart ondc-bap
+
+# Step 10: Check service status
+systemctl status ondc-bap --no-pager
+
+# Step 11: Test the endpoint
+curl http://localhost:8000/v1/bap/on_subscribe/test
+
+echo "Deployment fix completed!" 

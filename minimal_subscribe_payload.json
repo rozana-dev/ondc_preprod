@@ -1,0 +1,12 @@
+{
+  "subscriber_id": "neo-server.rozana.in",
+  "subscriber_url": "https://neo-server.rozana.in",
+  "domain": "nic2004:52110",
+  "type": "BAP",
+  "callback_url": "/on_subscribe",
+  "encryption_public_key": "MCowBQYDK2VuAyEAYyPyJR9s9pzfzVPY0+P/X4mxPKPvS5RnGgFkqSLc+mM=",
+  "signing_public_key": "QfhgZ30kF6m6aj6gjpvFl2NsdSaV2AfGDNvs9Sqbdl0=",
+  "valid_from": "2025-08-21T12:11:00.000Z",
+  "valid_until": "2025-12-31T23:59:59Z",
+  "status": "SUBSCRIBED"
+}

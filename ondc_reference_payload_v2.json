@@ -1,0 +1,37 @@
+{
+  "context": {
+    "domain": "ONDC:RET10",
+    "country": "IND",
+    "city": "std:011",
+    "action": "subscribe",
+    "core_version": "1.2.0",
+    "bap_id": "neo-server.rozana.in",
+    "bap_uri": "https://neo-server.rozana.in",
+    "transaction_id": "0102552d-98dc-49de-b6f1-e378bbe2c65d",
+    "message_id": "a2fe6d52-9fe4-4d1a-9d0b-dccb8b48522d",
+    "timestamp": "2025-01-21T10:30:00.000Z",
+    "ttl": "P1M"
+  },
+  "message": {
+    "subscriber_id": "neo-server.rozana.in",
+    "subscriber_url": "https://neo-server.rozana.in",
+    "callback_url": "/on_subscribe",
+    "signing_public_key": "QfhgZ30kF6m6aj6gjpvFl2NsdSaV2AfGDNvs9Sqbdl0=",
+    "encryption_public_key": "MCowBQYDK2VuAyEAYyPyJR9s9pzfzVPY0+P/X4mxPKPvS5RnGgFkqSLc+mM=",
+    "unique_key_id": "key_1755737751",
+    "request_id": "0102552d-98dc-49de-b6f1-e378bbe2c65d",
+    "timestamp": "2025-01-21T10:30:00.000Z",
+    "valid_from": "2025-01-21T10:30:00.000Z",
+    "valid_until": "2025-12-31T23:59:59.999Z",
+    "network_participant": [
+      {
+        "subscriber_url": "https://neo-server.rozana.in",
+        "domain": "ONDC:RET10",
+        "type": "buyerApp",
+        "msn": false,
+        "city": "std:011",
+        "country": "IND"
+      }
+    ]
+  }
+} 

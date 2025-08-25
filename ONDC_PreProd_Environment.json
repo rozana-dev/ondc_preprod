@@ -1,0 +1,90 @@
+{
+  "id": "ondc-preprod-env",
+  "name": "ONDC PreProd Environment",
+  "values": [
+    {
+      "key": "base_url",
+      "value": "https://neo-server.rozana.in",
+      "description": "Production BAP URL",
+      "enabled": true
+    },
+    {
+      "key": "local_url", 
+      "value": "http://localhost:8000",
+      "description": "Local development BAP URL",
+      "enabled": true
+    },
+    {
+      "key": "subscriber_id",
+      "value": "neo-server.rozana.in",
+      "description": "ONDC Subscriber ID", 
+      "enabled": true
+    },
+    {
+      "key": "domain",
+      "value": "ONDC:RET10",
+      "description": "ONDC Domain (Retail)",
+      "enabled": true
+    },
+    {
+      "key": "legacy_domain",
+      "value": "nic2004:52110", 
+      "description": "Legacy ONDC Domain Code",
+      "enabled": true
+    },
+    {
+      "key": "preprod_registry",
+      "value": "https://preprod.registry.ondc.org",
+      "description": "Pre-production ONDC Registry",
+      "enabled": true
+    },
+    {
+      "key": "staging_registry",
+      "value": "https://staging.registry.ondc.org", 
+      "description": "Staging ONDC Registry",
+      "enabled": true
+    },
+    {
+      "key": "pramaan_url",
+      "value": "https://pramaan.ondc.org",
+      "description": "Pramaan eKYC Service URL",
+      "enabled": true
+    },
+    {
+      "key": "transaction_id",
+      "value": "",
+      "description": "Current transaction ID - auto-generated UUID v4",
+      "enabled": true
+    },
+    {
+      "key": "signing_public_key",
+      "value": "QfhgZ30kF6m6aj6gjpvFl2NsdSaV2AfGDNvs9Sqbdl0=",
+      "description": "Ed25519 signing public key",
+      "enabled": true
+    },
+    {
+      "key": "encryption_public_key", 
+      "value": "MCowBQYDK2VuAyEAYyPyJR9s9pzfzVPY0+P/X4mxPKPvS5RnGgFkqSLc+mM=",
+      "description": "X25519 encryption public key",
+      "enabled": true
+    },
+    {
+      "key": "unique_key_id",
+      "value": "key_1755737751",
+      "description": "Unique key identifier",
+      "enabled": true
+    },
+    {
+      "key": "request_id",
+      "value": "0102552d-98dc-49de-b6f1-e378bbe2c65d", 
+      "description": "ONDC request ID",
+      "enabled": true
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "description": "Bearer token for authenticated requests (if required)",
+      "enabled": false
+    }
+  ]
+}

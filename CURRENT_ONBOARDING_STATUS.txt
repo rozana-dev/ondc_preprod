@@ -1,0 +1,85 @@
+CURRENT ONBOARDING ENDPOINTS STATUS
+===================================
+
+Testing on https://neo-server.rozana.in
+Timestamp: Thu Aug 21 17:26:04 IST 2025
+
+CURRENT STATUS (After Apache Fix Attempt)
+=========================================
+❌ 1. GET /onboarding/subscriber-info: 404 NOT FOUND
+❌ 2. GET /onboarding/checklist: 404 NOT FOUND
+❌ 3. GET /onboarding/subscribe-payload/pre_prod/1: 404 NOT FOUND
+❌ 4. POST /onboarding/generate-keys: 404 NOT FOUND
+❌ 5. POST /onboarding/test-challenge: 404 NOT FOUND
+❌ 6. POST /onboarding/register: 404 NOT FOUND
+❌ 7. GET /onboarding/registration-payload: 404 NOT FOUND
+✅ 8. GET /onboarding (base endpoint): WORKING
+❌ 9. POST /vlookup: 404 NOT FOUND
+
+WORKING ENDPOINTS (for comparison)
+==================================
+✅ GET /healthz: {"status":"ok"}
+✅ GET /lookup: {"status":"ok"}
+✅ POST /on_subscribe: {"status":"ACK","message":"Callback received"}
+
+ISSUE ANALYSIS
+==============
+The Apache configuration fix has NOT been applied yet. The sub-paths are still returning 404 errors.
+
+ROOT CAUSE
+==========
+The Apache configuration is missing the proper proxy rules for handling sub-paths:
+- Current rule: `ProxyPass /onboarding http://localhost:8000/onboarding`
+- Required rules: 
+  - `ProxyPass /onboarding/ http://localhost:8000/onboarding/` (for sub-paths)
+  - `ProxyPass /onboarding http://localhost:8000/onboarding` (for base endpoint)
+
+SOLUTION
+========
+I've created a complete Apache fix script: `complete_apache_fix_for_onboarding.sh`
+
+This script will:
+1. Find your Apache configuration file
+2. Create a backup
+3. Apply the complete configuration with proper sub-path handling
+4. Test and reload Apache
+5. Verify the endpoints work
+
+REQUIRED ACTION
+==============
+Run the Apache fix script on your Ubuntu server:
+
+```bash
+# Upload the script to your server
+scp complete_apache_fix_for_onboarding.sh user@your-server:/tmp/
+
+# SSH to your server and run it
+ssh user@your-server
+cd /tmp
+chmod +x complete_apache_fix_for_onboarding.sh
+sudo ./complete_apache_fix_for_onboarding.sh
+```
+
+EXPECTED RESULT
+==============
+After running the script, all these endpoints should work:
+- ✅ /onboarding/subscriber-info
+- ✅ /onboarding/checklist
+- ✅ /onboarding/subscribe-payload/pre_prod/1
+- ✅ /onboarding/generate-keys
+- ✅ /onboarding/test-challenge
+- ✅ /onboarding/register
+- ✅ /onboarding/registration-payload
+- ✅ /vlookup
+
+CURRENT PROGRESS
+================
+🎯 FastAPI Application: ✅ 100% Working (tested locally)
+🌐 Apache Configuration: ❌ Needs complete fix
+📊 Overall Progress: 60% Complete
+
+NEXT STEPS
+==========
+1. Apply the Apache configuration fix
+2. Test all endpoints again
+3. Proceed with ONDC onboarding 

@@ -1,0 +1,22 @@
+{
+  "subscriber_id": "neo-server.rozana.in",
+  "subscriber_url": "https://neo-server.rozana.in",
+  "callback_url": "/on_subscribe",
+  "signing_public_key": "hg53BplBqSeNcjESXQfxXS2RdALjVLjI0aqLyn04AzY=",
+  "encryption_public_key": "MCowBQYDK2VuAyEATdbplW7AFuLDrgLI4aN/X8XVDC9Yj7L082YIUyehWiA=",
+  "unique_key_id": "key_1755759138",
+  "request_id": "staging-request-12345",
+  "timestamp": "2025-08-21T12:22:00.000Z",
+  "valid_from": "2025-08-21T12:22:00.000Z",
+  "valid_until": "2025-12-31T23:59:59.999Z",
+  "network_participant": [
+    {
+      "subscriber_url": "https://neo-server.rozana.in",
+      "domain": "ONDC:RET10",
+      "type": "buyerApp",
+      "msn": false,
+      "city_code": ["std:011"],
+      "country": "IND"
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+SIMPLE ONBOARDING FIX - STEP BY STEP
+====================================
+
+You're right! The onboarding endpoints are still returning 404. Let's fix this step by step.
+
+STEP 1: FIND THE CORRECT CONFIGURATION FILE
+===========================================
+Run this command to find your Apache configuration file:
+sudo grep -r "neo-server.rozana.in" /etc/apache2/sites-available/
+
+If that doesn't work, try:
+sudo ls -la /etc/apache2/sites-available/
+
+Look for files like:
+- neo-server.rozana.in.conf
+- default-ssl.conf
+- 000-default.conf
+
+STEP 2: CHECK CURRENT PROXY RULES
+=================================
+Once you find the file, check what proxy rules exist:
+sudo grep -n "ProxyPass" /etc/apache2/sites-available/YOUR_FILENAME
+
+STEP 3: ADD THE MISSING PROXY RULES
+===================================
+Replace YOUR_FILENAME with the actual filename you found:
+
+# Backup the file
+sudo cp /etc/apache2/sites-available/YOUR_FILENAME /etc/apache2/sites-available/YOUR_FILENAME.backup
+
+# Add the missing proxy rules
+sudo tee -a /etc/apache2/sites-available/YOUR_FILENAME > /dev/null << 'EOF'
+
+    # Onboarding endpoints - ADDED FOR ONDC SUBSCRIBE
+    ProxyPass /onboarding http://localhost:8000/onboarding
+    ProxyPassReverse /onboarding http://localhost:8000/onboarding
+    
+    # Lookup endpoints - ADDED FOR ONDC LOOKUP
+    ProxyPass /vlookup http://localhost:8000/vlookup
+    ProxyPassReverse /vlookup http://localhost:8000/vlookup
+EOF
+
+STEP 4: TEST AND RELOAD
+=======================
+# Test the configuration
+sudo apache2ctl configtest
+
+# If test passes, reload Apache
+sudo systemctl reload apache2
+
+STEP 5: VERIFY THE FIX
+======================
+# Test the endpoints
+curl -s "https://neo-server.rozana.in/onboarding/subscriber-info"
+curl -s "https://neo-server.rozana.in/onboarding/checklist"
+curl -s "https://neo-server.rozana.in/onboarding/subscribe-payload/pre_prod/1"
+
+QUICK ONE-LINER (replace YOUR_FILENAME):
+========================================
+sudo cp /etc/apache2/sites-available/YOUR_FILENAME /etc/apache2/sites-available/YOUR_FILENAME.backup && sudo tee -a /etc/apache2/sites-available/YOUR_FILENAME > /dev/null << 'EOF'
+
+    # Onboarding endpoints - ADDED FOR ONDC SUBSCRIBE
+    ProxyPass /onboarding http://localhost:8000/onboarding
+    ProxyPassReverse /onboarding http://localhost:8000/onboarding
+    
+    # Lookup endpoints - ADDED FOR ONDC LOOKUP
+    ProxyPass /vlookup http://localhost:8000/vlookup
+    ProxyPassReverse /vlookup http://localhost:8000/vlookup
+EOF
+sudo apache2ctl configtest && sudo systemctl reload apache2
+
+TROUBLESHOOTING:
+================
+If still not working:
+
+1. Check if FastAPI is running:
+   sudo systemctl status ondc-bap
+
+2. Check if port 8000 is accessible:
+   sudo netstat -tlnp | grep 8000
+
+3. Test local endpoints:
+   curl http://localhost:8000/onboarding/subscriber-info
+
+4. Check Apache error logs:
+   sudo tail -f /var/log/apache2/error.log
+
+5. Check if Apache modules are enabled:
+   sudo a2enmod proxy
+   sudo a2enmod proxy_http
+   sudo systemctl restart apache2 

@@ -1,0 +1,23 @@
+# Apache Configuration Fix Commands
+# Run these commands on your server as root to fix the /v1/bap/ routing issue
+
+# Step 1: Backup current configuration
+cp /etc/apache2/sites-available/ondc-bap.conf /etc/apache2/sites-available/ondc-bap.conf.backup.$(date +%Y%m%d_%H%M%S)
+
+# Step 2: Add the missing /v1/bap/ route to Apache config
+# Add this line to the Apache config file after the /on_subscribe line:
+echo "ProxyPass /v1/bap http://localhost:8000/v1/bap" >> /etc/apache2/sites-available/ondc-bap.conf
+echo "ProxyPassReverse /v1/bap http://localhost:8000/v1/bap" >> /etc/apache2/sites-available/ondc-bap.conf
+
+# Step 3: Test the configuration
+apache2ctl configtest
+
+# Step 4: Reload Apache
+systemctl reload apache2
+
+# Step 5: Test the endpoints
+curl https://neo-server.rozana.in/v1/bap/on_subscribe/test
+curl https://neo-server.rozana.in/v1/bap/verification
+curl https://neo-server.rozana.in/v1/bap/onboarding/checklist
+
+echo "Apache configuration fix completed!" 

@@ -1,0 +1,247 @@
+PUBLIC URL TESTING RESULTS - ONDC BAP APPLICATION
+=================================================
+
+All endpoints tested on https://neo-server.rozana.in
+Base URL: https://neo-server.rozana.in
+
+1. HEALTH ENDPOINTS
+==================
+GET /healthz
+Status: ✅ WORKING
+Response: {"status": "ok"}
+
+GET /livez  
+Status: ❌ 404 NOT FOUND
+Response: Apache 404 error page
+
+GET /readyz
+Status: ❌ 404 NOT FOUND
+Response: Apache 404 error page
+
+2. LOOKUP ENDPOINTS
+==================
+GET /lookup
+Status: ✅ WORKING
+Response: {"status": "ok"}
+
+POST /vlookup
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+3. ONDC CALLBACK ENDPOINTS
+==========================
+POST /on_subscribe
+Status: ✅ WORKING
+Response: {
+  "status": "ACK",
+  "message": "Callback received"
+}
+
+GET /ondc-site-verification.html
+Status: ✅ WORKING
+Response: HTML file with meta tag containing signed request ID
+
+4. ONBOARDING ENDPOINTS
+=======================
+GET /onboarding/subscribe-payload/pre_prod/1
+Status: ❌ 404 NOT FOUND
+Response: Apache 404 error page
+
+GET /onboarding/subscriber-info
+Status: ❌ 404 NOT FOUND
+Response: Apache 404 error page
+
+GET /onboarding/checklist
+Status: ❌ 404 NOT FOUND
+Response: Apache 404 error page
+
+POST /onboarding/test-challenge
+Status: ❌ 404 NOT FOUND
+Response: Apache 404 error page
+
+POST /onboarding/generate-keys
+Status: ❌ 404 NOT FOUND
+Response: Apache 404 error page
+
+GET /onboarding/registration-payload
+Status: ❌ 404 NOT FOUND
+Response: Apache 404 error page
+
+POST /onboarding/register
+Status: ❌ 404 NOT FOUND
+Response: Apache 404 error page
+
+5. ONDC CORE ACTION ENDPOINTS
+=============================
+POST /search
+Status: ❌ 404 NOT FOUND
+Response: Apache 404 error page
+
+POST /select
+Status: ❌ 404 NOT FOUND
+Response: Apache 404 error page
+
+POST /init
+Status: ❌ 404 NOT FOUND
+Response: Apache 404 error page
+
+POST /confirm
+Status: ❌ 404 NOT FOUND
+Response: Apache 404 error page
+
+POST /status
+Status: ❌ 404 NOT FOUND
+Response: Apache 404 error page
+
+POST /track
+Status: ❌ 404 NOT FOUND
+Response: Apache 404 error page
+
+POST /cancel
+Status: ❌ 404 NOT FOUND
+Response: Apache 404 error page
+
+POST /rating
+Status: ❌ 404 NOT FOUND
+Response: Apache 404 error page
+
+POST /support
+Status: ❌ 404 NOT FOUND
+Response: Apache 404 error page
+
+6. TESTING COMMANDS USED
+========================
+# Health endpoints
+curl -s "https://neo-server.rozana.in/healthz"
+curl -s "https://neo-server.rozana.in/livez"
+curl -s "https://neo-server.rozana.in/readyz"
+
+# Lookup endpoints
+curl -s "https://neo-server.rozana.in/lookup"
+curl -s -X POST "https://neo-server.rozana.in/vlookup" -H "Content-Type: application/json" -d '{"sender_subscriber_id": "test.ondc.org", "request_id": "test-123", "timestamp": "2025-01-21T10:00:00.000Z", "signature": "test", "search_parameters": {"country": "IND", "domain": "nic2004:52110", "type": "buyerApp", "city": "011", "subscriber_id": "neo-server.rozana.in"}}'
+
+# ONDC callback endpoints
+curl -s -X POST "https://neo-server.rozana.in/on_subscribe" -H "Content-Type: application/json" -d '{"test": "challenge"}'
+curl -s "https://neo-server.rozana.in/ondc-site-verification.html"
+
+# Onboarding endpoints
+curl -s "https://neo-server.rozana.in/onboarding/subscribe-payload/pre_prod/1"
+curl -s "https://neo-server.rozana.in/onboarding/subscriber-info"
+curl -s "https://neo-server.rozana.in/onboarding/checklist"
+curl -s -X POST "https://neo-server.rozana.in/onboarding/test-challenge" -H "Content-Type: application/json" -d '{"test": "challenge"}'
+curl -s -X POST "https://neo-server.rozana.in/onboarding/generate-keys"
+curl -s "https://neo-server.rozana.in/onboarding/registration-payload"
+curl -s -X POST "https://neo-server.rozana.in/onboarding/register" -H "Content-Type: application/json" -d '{"environment": "pre_prod", "ops_no": 1}'
+
+# Core action endpoints
+curl -s -X POST "https://neo-server.rozana.in/search" -H "Content-Type: application/json" -d '{"test": "data"}'
+curl -s -X POST "https://neo-server.rozana.in/select" -H "Content-Type: application/json" -d '{"test": "data"}'
+curl -s -X POST "https://neo-server.rozana.in/init" -H "Content-Type: application/json" -d '{"test": "data"}'
+curl -s -X POST "https://neo-server.rozana.in/confirm" -H "Content-Type: application/json" -d '{"test": "data"}'
+curl -s -X POST "https://neo-server.rozana.in/status" -H "Content-Type: application/json" -d '{"test": "data"}'
+curl -s -X POST "https://neo-server.rozana.in/track" -H "Content-Type: application/json" -d '{"test": "data"}'
+curl -s -X POST "https://neo-server.rozana.in/cancel" -H "Content-Type: application/json" -d '{"test": "data"}'
+curl -s -X POST "https://neo-server.rozana.in/rating" -H "Content-Type: application/json" -d '{"test": "data"}'
+curl -s -X POST "https://neo-server.rozana.in/support" -H "Content-Type: application/json" -d '{"test": "data"}'
+
+7. SUMMARY
+==========
+Total Endpoints Tested: 17
+Working Endpoints: 4/17 (24%)
+Failed Endpoints: 13/17 (76%)
+
+Working Categories:
+✅ Health Endpoints (1/3) - Only /healthz working
+❌ Lookup Endpoints (1/2) - Only /lookup working
+✅ ONDC Callback Endpoints (2/2) - Both working
+❌ Onboarding Endpoints (0/8) - None working
+❌ Core Action Endpoints (0/9) - None working
+
+Working Endpoints:
+✅ GET /healthz
+✅ GET /lookup  
+✅ POST /on_subscribe
+✅ GET /ondc-site-verification.html
+
+Failed Endpoints (404 Not Found):
+❌ GET /livez
+❌ GET /readyz
+❌ POST /vlookup
+❌ GET /onboarding/subscribe-payload/pre_prod/1
+❌ GET /onboarding/subscriber-info
+❌ GET /onboarding/checklist
+❌ POST /onboarding/test-challenge
+❌ POST /onboarding/generate-keys
+❌ GET /onboarding/registration-payload
+❌ POST /onboarding/register
+❌ POST /search
+❌ POST /select
+❌ POST /init
+❌ POST /confirm
+❌ POST /status
+❌ POST /track
+❌ POST /cancel
+❌ POST /rating
+❌ POST /support
+
+8. APACHE CONFIGURATION NEEDED
+==============================
+The following proxy rules need to be added to Apache configuration:
+
+# Health endpoints
+ProxyPass /livez http://localhost:8000/livez
+ProxyPassReverse /livez http://localhost:8000/livez
+
+ProxyPass /readyz http://localhost:8000/readyz
+ProxyPassReverse /readyz http://localhost:8000/readyz
+
+# Lookup endpoints
+ProxyPass /vlookup http://localhost:8000/vlookup
+ProxyPassReverse /vlookup http://localhost:8000/vlookup
+
+# Onboarding endpoints
+ProxyPass /onboarding http://localhost:8000/onboarding
+ProxyPassReverse /onboarding http://localhost:8000/onboarding
+
+# Core action endpoints
+ProxyPass /search http://localhost:8000/search
+ProxyPassReverse /search http://localhost:8000/search
+
+ProxyPass /select http://localhost:8000/select
+ProxyPassReverse /select http://localhost:8000/select
+
+ProxyPass /init http://localhost:8000/init
+ProxyPassReverse /init http://localhost:8000/init
+
+ProxyPass /confirm http://localhost:8000/confirm
+ProxyPassReverse /confirm http://localhost:8000/confirm
+
+ProxyPass /status http://localhost:8000/status
+ProxyPassReverse /status http://localhost:8000/status
+
+ProxyPass /track http://localhost:8000/track
+ProxyPassReverse /track http://localhost:8000/track
+
+ProxyPass /cancel http://localhost:8000/cancel
+ProxyPassReverse /cancel http://localhost:8000/cancel
+
+ProxyPass /rating http://localhost:8000/rating
+ProxyPassReverse /rating http://localhost:8000/rating
+
+ProxyPass /support http://localhost:8000/support
+ProxyPassReverse /support http://localhost:8000/support
+
+9. STATUS
+=========
+Current Status: PARTIALLY DEPLOYED
+- Core ONDC callback endpoints are working
+- Basic health and lookup endpoints are working
+- Most endpoints need Apache configuration updates
+
+Next Steps:
+1. Add missing Apache proxy rules
+2. Reload Apache configuration
+3. Test all endpoints again
+4. Verify ONDC onboarding functionality
+
+The application is running correctly on the server, but Apache reverse proxy needs to be configured for all endpoints. 

@@ -1,0 +1,175 @@
+UPDATED PUBLIC URL TESTING RESULTS - ONDC BAP APPLICATION
+=========================================================
+
+All endpoints tested on https://neo-server.rozana.in
+Timestamp: Thu Aug 21 16:03:30 IST 2025
+
+1. HEALTH ENDPOINTS
+==================
+GET /healthz
+Status: ✅ WORKING
+Response: {"status": "ok"}
+
+GET /livez  
+Status: ✅ WORKING (IMPROVED!)
+Response: {"status": "ok"}
+
+GET /readyz
+Status: ✅ WORKING (IMPROVED!)
+Response: {"status": "ok"}
+
+2. LOOKUP ENDPOINTS
+==================
+GET /lookup
+Status: ✅ WORKING
+Response: {"status": "ok"}
+
+POST /vlookup
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+3. ONDC CALLBACK ENDPOINTS
+==========================
+POST /on_subscribe
+Status: ✅ WORKING
+Response: {
+  "status": "ACK",
+  "message": "Callback received"
+}
+
+GET /ondc-site-verification.html
+Status: ✅ WORKING
+Response: HTML file with meta tag containing signed request ID
+
+4. ONBOARDING ENDPOINTS
+=======================
+GET /onboarding/subscribe-payload/pre_prod/1
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+GET /onboarding/subscriber-info
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+GET /onboarding/checklist
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+POST /onboarding/test-challenge
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+POST /onboarding/generate-keys
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+GET /onboarding/registration-payload
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+POST /onboarding/register
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+5. ONDC CORE ACTION ENDPOINTS
+=============================
+POST /search
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+POST /select
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+POST /init
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+POST /confirm
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+POST /status
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+POST /track
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+POST /cancel
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+POST /rating
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+POST /support
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+6. SUMMARY
+==========
+Total Endpoints Tested: 17
+Working Endpoints: 5/17 (29%) - IMPROVED!
+Failed Endpoints: 12/17 (71%)
+
+IMPROVEMENTS MADE:
+✅ GET /livez - Now working (was 404 before)
+✅ GET /readyz - Now working (was 404 before)
+
+Working Categories:
+✅ Health Endpoints (3/3) - ALL WORKING NOW!
+❌ Lookup Endpoints (1/2) - Only /lookup working
+✅ ONDC Callback Endpoints (2/2) - Both working
+❌ Onboarding Endpoints (0/8) - None working
+❌ Core Action Endpoints (0/9) - None working
+
+Working Endpoints:
+✅ GET /healthz
+✅ GET /livez (NEW!)
+✅ GET /readyz (NEW!)
+✅ GET /lookup  
+✅ POST /on_subscribe
+✅ GET /ondc-site-verification.html
+
+Failed Endpoints (404 Not Found):
+❌ POST /vlookup
+❌ GET /onboarding/subscribe-payload/pre_prod/1
+❌ GET /onboarding/subscriber-info
+❌ GET /onboarding/checklist
+❌ POST /onboarding/test-challenge
+❌ POST /onboarding/generate-keys
+❌ GET /onboarding/registration-payload
+❌ POST /onboarding/register
+❌ POST /search
+❌ POST /select
+❌ POST /init
+❌ POST /confirm
+❌ POST /status
+❌ POST /track
+❌ POST /cancel
+❌ POST /rating
+❌ POST /support
+
+7. PROGRESS ASSESSMENT
+======================
+✅ EXCELLENT PROGRESS! Health endpoints are now fully working.
+✅ Core ONDC callback endpoints are working.
+✅ Basic lookup endpoint is working.
+
+❌ Still need to fix:
+- /vlookup endpoint
+- All /onboarding/* endpoints
+- All core action endpoints (/search, /select, etc.)
+
+8. NEXT STEPS NEEDED
+====================
+The Apache configuration needs additional proxy rules for:
+- /vlookup
+- /onboarding (and all sub-paths)
+- /search, /select, /init, /confirm, /status, /track, /cancel, /rating, /support
+
+Current Status: GOOD PROGRESS - Health endpoints fixed!
+Next Priority: Fix remaining endpoint routing in Apache configuration. 

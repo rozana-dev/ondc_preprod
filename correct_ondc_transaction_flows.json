@@ -1,0 +1,456 @@
+{
+  "order_flow": {
+    "transaction_id": "7ebcb32f-d711-4c78-8b97-d1eeefca54c2",
+    "flow_type": "Complete Order Journey",
+    "messages": {
+      "search": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "search",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "7ebcb32f-d711-4c78-8b97-d1eeefca54c2",
+          "message_id": "a3adc6f2-7960-4bf9-b0cc-3616d46d18ec",
+          "timestamp": "2025-08-22T14:13:25.787Z",
+          "ttl": "PT30S"
+        },
+        "message": {
+          "intent": {
+            "item": {
+              "descriptor": {
+                "name": "Test Product for Pramaan"
+              }
+            },
+            "fulfillment": {
+              "type": "Delivery",
+              "end": {
+                "location": {
+                  "gps": "28.6139,77.2090",
+                  "address": {
+                    "area_code": "110037"
+                  }
+                }
+              }
+            },
+            "payment": {
+              "type": "PRE-PAID"
+            }
+          }
+        }
+      },
+      "select": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "select",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "7ebcb32f-d711-4c78-8b97-d1eeefca54c2",
+          "message_id": "502d5012-d9f4-45d1-9150-c1e83a8a8928",
+          "timestamp": "2025-08-22T14:13:25.787Z",
+          "ttl": "PT30S",
+          "bpp_id": "pramaan.ondc.org/beta/preprod/mock/seller",
+          "bpp_uri": "https://pramaan.ondc.org/beta/preprod/mock/seller"
+        },
+        "message": {
+          "order": {
+            "provider": {
+              "id": "pramaan_provider_1"
+            },
+            "items": [
+              {
+                "id": "item_001",
+                "quantity": {
+                  "count": 2
+                }
+              }
+            ],
+            "billing": {
+              "address": {
+                "name": "John Doe",
+                "building": "123 Test Building",
+                "locality": "Test Locality",
+                "city": "New Delhi",
+                "state": "Delhi",
+                "country": "IND",
+                "area_code": "110037"
+              },
+              "phone": "9876543210",
+              "email": "test@neo-server.rozana.in"
+            },
+            "fulfillment": {
+              "type": "Delivery",
+              "end": {
+                "location": {
+                  "gps": "28.6139,77.2090",
+                  "address": {
+                    "name": "John Doe",
+                    "building": "123 Test Building",
+                    "locality": "Test Locality",
+                    "city": "New Delhi",
+                    "state": "Delhi",
+                    "country": "IND",
+                    "area_code": "110037"
+                  }
+                },
+                "contact": {
+                  "phone": "9876543210"
+                }
+              }
+            }
+          }
+        }
+      },
+      "init": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "init",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "7ebcb32f-d711-4c78-8b97-d1eeefca54c2",
+          "message_id": "44485608-3bbe-43c5-9cb2-a56b01cca94c",
+          "timestamp": "2025-08-22T14:13:25.787Z",
+          "ttl": "PT30S",
+          "bpp_id": "pramaan.ondc.org/beta/preprod/mock/seller",
+          "bpp_uri": "https://pramaan.ondc.org/beta/preprod/mock/seller"
+        },
+        "message": {
+          "order": {
+            "provider": {
+              "id": "pramaan_provider_1"
+            },
+            "items": [
+              {
+                "id": "item_001",
+                "quantity": {
+                  "count": 2
+                }
+              }
+            ],
+            "billing": {
+              "address": {
+                "name": "John Doe",
+                "building": "123 Test Building",
+                "locality": "Test Locality",
+                "city": "New Delhi",
+                "state": "Delhi",
+                "country": "IND",
+                "area_code": "110037"
+              },
+              "phone": "9876543210",
+              "email": "test@neo-server.rozana.in"
+            },
+            "fulfillment": {
+              "type": "Delivery"
+            },
+            "payment": {
+              "type": "PRE-PAID",
+              "collected_by": "BAP"
+            }
+          }
+        }
+      },
+      "confirm": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "confirm",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "7ebcb32f-d711-4c78-8b97-d1eeefca54c2",
+          "message_id": "99fbf530-a4f3-462e-a28e-f7b831eab05d",
+          "timestamp": "2025-08-22T14:13:25.787Z",
+          "ttl": "PT30S",
+          "bpp_id": "pramaan.ondc.org/beta/preprod/mock/seller",
+          "bpp_uri": "https://pramaan.ondc.org/beta/preprod/mock/seller"
+        },
+        "message": {
+          "order": {
+            "id": "order_7ebcb32f_d711_4c78_8b97_d1eeefca54c2",
+            "provider": {
+              "id": "pramaan_provider_1"
+            },
+            "items": [
+              {
+                "id": "item_001",
+                "quantity": {
+                  "count": 2
+                }
+              }
+            ],
+            "payment": {
+              "type": "PRE-PAID",
+              "collected_by": "BAP",
+              "status": "PAID"
+            }
+          }
+        }
+      },
+      "status": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "status",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "7ebcb32f-d711-4c78-8b97-d1eeefca54c2",
+          "message_id": "4c7acb8f-b6e7-4bf5-beb9-79a2115de0bb",
+          "timestamp": "2025-08-22T14:13:25.787Z",
+          "ttl": "PT30S",
+          "bpp_id": "pramaan.ondc.org/beta/preprod/mock/seller",
+          "bpp_uri": "https://pramaan.ondc.org/beta/preprod/mock/seller"
+        },
+        "message": {
+          "order_id": "order_7ebcb32f_d711_4c78_8b97_d1eeefca54c2"
+        }
+      },
+      "track": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "track",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "7ebcb32f-d711-4c78-8b97-d1eeefca54c2",
+          "message_id": "df39f376-0360-42cd-81ab-d1bbdd9dc45a",
+          "timestamp": "2025-08-22T14:13:25.787Z",
+          "ttl": "PT30S",
+          "bpp_id": "pramaan.ondc.org/beta/preprod/mock/seller",
+          "bpp_uri": "https://pramaan.ondc.org/beta/preprod/mock/seller"
+        },
+        "message": {
+          "order_id": "order_7ebcb32f_d711_4c78_8b97_d1eeefca54c2"
+        }
+      }
+    }
+  },
+  "issue_flow": {
+    "transaction_id": "3d08f88f-64f9-4e9f-b516-886620c40ca2",
+    "flow_type": "Issue & Grievance Management",
+    "messages": {
+      "issue": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "issue",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "3d08f88f-64f9-4e9f-b516-886620c40ca2",
+          "message_id": "42e6a341-1ad9-45db-ab69-edabac681846",
+          "timestamp": "2025-08-22T14:13:25.787Z",
+          "ttl": "PT30S",
+          "bpp_id": "pramaan.ondc.org/beta/preprod/mock/seller",
+          "bpp_uri": "https://pramaan.ondc.org/beta/preprod/mock/seller"
+        },
+        "message": {
+          "issue": {
+            "id": "issue_3d08f88f_64f9_4e9f_b516_886620c40ca2",
+            "category": "ITEM",
+            "sub_category": "ITM01",
+            "complainant_info": {
+              "person": {
+                "name": "John Doe"
+              },
+              "contact": {
+                "phone": "9876543210",
+                "email": "test@neo-server.rozana.in"
+              }
+            },
+            "order_details": {
+              "id": "order_7ebcb32f_d711_4c78_8b97_d1eeefca54c2",
+              "state": "Completed",
+              "items": [
+                {
+                  "id": "item_001",
+                  "quantity": 1
+                }
+              ]
+            },
+            "description": {
+              "short_desc": "Item damaged during delivery",
+              "long_desc": "The item received was damaged during delivery"
+            },
+            "source": {
+              "network_participant_id": "neo-server.rozana.in",
+              "type": "CONSUMER"
+            },
+            "expected_response_time": {
+              "duration": "PT2H"
+            },
+            "expected_resolution_time": {
+              "duration": "P1D"
+            },
+            "status": "OPEN",
+            "issue_type": "ISSUE",
+            "created_at": "2025-08-22T14:13:25.787Z"
+          }
+        }
+      },
+      "issue_status": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "issue_status",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "3d08f88f-64f9-4e9f-b516-886620c40ca2",
+          "message_id": "2c854d58-ed49-46c3-9454-1f246b217929",
+          "timestamp": "2025-08-22T14:13:25.787Z",
+          "ttl": "PT30S",
+          "bpp_id": "pramaan.ondc.org/beta/preprod/mock/seller",
+          "bpp_uri": "https://pramaan.ondc.org/beta/preprod/mock/seller"
+        },
+        "message": {
+          "issue_id": "issue_3d08f88f_64f9_4e9f_b516_886620c40ca2"
+        }
+      },
+      "issue_close": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "issue",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "3d08f88f-64f9-4e9f-b516-886620c40ca2",
+          "message_id": "ae148e49-5e24-4bda-bf0e-ebcd614d1b5a",
+          "timestamp": "2025-08-22T14:13:25.787Z",
+          "ttl": "PT30S",
+          "bpp_id": "pramaan.ondc.org/beta/preprod/mock/seller",
+          "bpp_uri": "https://pramaan.ondc.org/beta/preprod/mock/seller"
+        },
+        "message": {
+          "issue": {
+            "id": "issue_3d08f88f_64f9_4e9f_b516_886620c40ca2",
+            "status": "CLOSED",
+            "resolution": {
+              "short_desc": "Issue resolved - replacement provided",
+              "long_desc": "The damaged item has been replaced",
+              "action_triggered": "REPLACE"
+            },
+            "updated_at": "2025-08-22T14:13:25.787Z"
+          }
+        }
+      }
+    }
+  },
+  "ekyc_flow": {
+    "transaction_id": "e65aa7a3-bf9c-447c-8ba6-8c2c129e8ec5",
+    "flow_type": "eKYC Verification",
+    "messages": {
+      "ekyc_search": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "search",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "e65aa7a3-bf9c-447c-8ba6-8c2c129e8ec5",
+          "message_id": "06c83bab-d18e-4c41-9429-aa8985c1f485",
+          "timestamp": "2025-08-22T14:13:25.787Z",
+          "ttl": "PT30S"
+        },
+        "message": {
+          "intent": {
+            "item": {
+              "descriptor": {
+                "name": "eKYC Verification Service"
+              }
+            },
+            "provider": {
+              "category_id": "ekyc"
+            }
+          }
+        }
+      },
+      "ekyc_select": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "select",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "e65aa7a3-bf9c-447c-8ba6-8c2c129e8ec5",
+          "message_id": "2f34d0df-dfc7-4071-b8b5-35d811602071",
+          "timestamp": "2025-08-22T14:13:25.787Z",
+          "ttl": "PT30S"
+        },
+        "message": {
+          "order": {
+            "provider": {
+              "id": "pramaan.ondc.org"
+            },
+            "items": [
+              {
+                "id": "ekyc_verification",
+                "descriptor": {
+                  "name": "Aadhaar Verification"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "ekyc_verify": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "verify",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "e65aa7a3-bf9c-447c-8ba6-8c2c129e8ec5",
+          "message_id": "04735ddb-d3d2-4a90-ae83-2521db677cdc",
+          "timestamp": "2025-08-22T14:13:25.787Z",
+          "ttl": "PT30S"
+        },
+        "message": {
+          "order": {
+            "provider": {
+              "id": "pramaan.ondc.org"
+            },
+            "items": [
+              {
+                "id": "ekyc_verification",
+                "descriptor": {
+                  "name": "Aadhaar Verification"
+                }
+              }
+            ]
+          },
+          "documents": [
+            {
+              "document_type": "AADHAAR",
+              "document_number": "1234-5678-9012",
+              "name": "John Doe"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

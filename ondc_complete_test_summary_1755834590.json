@@ -1,0 +1,117 @@
+{
+  "test_time": "2025-08-22T09:19:50.873450",
+  "subscriber_id": "neo-server.rozana.in",
+  "total_tests": 12,
+  "passed_tests": 6,
+  "success_rate": 50.0,
+  "results": [
+    [
+      "Pramaan Health",
+      true
+    ],
+    [
+      "Pramaan Discovery",
+      true
+    ],
+    [
+      "Pramaan eKYC",
+      false
+    ],
+    [
+      "Registry Health",
+      true
+    ],
+    [
+      "Registry Discovery",
+      false
+    ],
+    [
+      "Registry Subscribe",
+      true
+    ],
+    [
+      "Registry Lookup",
+      false
+    ],
+    [
+      "Local BAP Health",
+      false
+    ],
+    [
+      "Local BAP Endpoints",
+      false
+    ],
+    [
+      "Public BAP Health",
+      false
+    ],
+    [
+      "Public BAP Endpoints",
+      true
+    ],
+    [
+      "Site Verification",
+      true
+    ]
+  ],
+  "categories": {
+    "Pramaan": [
+      [
+        "Pramaan Health",
+        true
+      ],
+      [
+        "Pramaan Discovery",
+        true
+      ],
+      [
+        "Pramaan eKYC",
+        false
+      ]
+    ],
+    "Registry": [
+      [
+        "Registry Health",
+        true
+      ],
+      [
+        "Registry Discovery",
+        false
+      ],
+      [
+        "Registry Subscribe",
+        true
+      ],
+      [
+        "Registry Lookup",
+        false
+      ]
+    ],
+    "Local BAP": [
+      [
+        "Local BAP Health",
+        false
+      ],
+      [
+        "Local BAP Endpoints",
+        false
+      ]
+    ],
+    "Public BAP": [
+      [
+        "Public BAP Health",
+        false
+      ],
+      [
+        "Public BAP Endpoints",
+        true
+      ]
+    ],
+    "Verification": [
+      [
+        "Site Verification",
+        true
+      ]
+    ]
+  }
+}

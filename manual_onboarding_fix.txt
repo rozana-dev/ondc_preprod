@@ -1,0 +1,48 @@
+MANUAL ONBOARDING FIX - STEP BY STEP
+====================================
+
+Run these commands on your Ubuntu server to fix the /onboarding endpoints:
+
+1. BACKUP CURRENT CONFIG:
+sudo cp /etc/apache2/sites-available/neo-server.rozana.in.conf /etc/apache2/sites-available/neo-server.rozana.in.conf.backup.$(date +%Y%m%d_%H%M%S)
+
+2. ADD ONBOARDING PROXY RULES:
+sudo tee -a /etc/apache2/sites-available/neo-server.rozana.in.conf > /dev/null << 'EOF'
+
+    # Onboarding endpoints - ADDED FOR ONDC SUBSCRIBE
+    ProxyPass /onboarding http://localhost:8000/onboarding
+    ProxyPassReverse /onboarding http://localhost:8000/onboarding
+EOF
+
+3. TEST CONFIG:
+sudo apache2ctl configtest
+
+4. RELOAD APACHE:
+sudo systemctl reload apache2
+
+5. TEST ENDPOINTS:
+curl -s "https://neo-server.rozana.in/onboarding/subscriber-info" | jq .
+curl -s "https://neo-server.rozana.in/onboarding/checklist" | jq .
+curl -s "https://neo-server.rozana.in/onboarding/subscribe-payload/pre_prod/1" | jq .
+
+QUICK ONE-LINER TO COPY-PASTE:
+==============================
+sudo cp /etc/apache2/sites-available/neo-server.rozana.in.conf /etc/apache2/sites-available/neo-server.rozana.in.conf.backup && sudo tee -a /etc/apache2/sites-available/neo-server.rozana.in.conf > /dev/null << 'EOF'
+
+    # Onboarding endpoints - ADDED FOR ONDC SUBSCRIBE
+    ProxyPass /onboarding http://localhost:8000/onboarding
+    ProxyPassReverse /onboarding http://localhost:8000/onboarding
+EOF
+sudo apache2ctl configtest && sudo systemctl reload apache2
+
+WHAT THIS FIXES:
+================
+✅ GET /onboarding/subscriber-info
+✅ GET /onboarding/checklist  
+✅ GET /onboarding/subscribe-payload/pre_prod/1
+✅ POST /onboarding/generate-keys
+✅ POST /onboarding/register
+✅ POST /onboarding/test-challenge
+✅ GET /onboarding/registration-payload
+
+After running this fix, all /onboarding/* endpoints will be accessible on your public URL. 

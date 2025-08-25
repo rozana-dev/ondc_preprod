@@ -1,0 +1,114 @@
+LATEST ONBOARDING ENDPOINTS TEST RESULTS
+========================================
+
+Testing on https://neo-server.rozana.in
+Timestamp: Thu Aug 21 16:55:51 IST 2025
+
+PUBLIC URL TESTING RESULTS
+==========================
+1. GET /onboarding/subscriber-info
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+2. GET /onboarding/checklist
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+3. GET /onboarding/subscribe-payload/pre_prod/1
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+4. POST /onboarding/generate-keys
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+5. POST /onboarding/test-challenge
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+6. POST /onboarding/register
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+7. GET /onboarding/registration-payload
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+8. GET /onboarding (base endpoint)
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+9. POST /vlookup
+Status: ❌ 404 NOT FOUND
+Response: {"detail": "Not Found"}
+
+STATUS SUMMARY
+==============
+✅ Working Endpoints:
+- GET /healthz
+- GET /livez
+- GET /readyz
+- GET /lookup
+- POST /on_subscribe
+- GET /ondc-site-verification.html
+- POST /search
+- POST /select
+- POST /init
+- POST /confirm
+- POST /status
+- POST /track
+- POST /cancel
+- POST /rating
+- POST /support
+
+❌ Failed Endpoints:
+- POST /vlookup
+- All /onboarding/* endpoints (8 endpoints)
+
+CURRENT ISSUE
+=============
+The Apache configuration still needs the proxy rules for:
+1. `/onboarding` - for all onboarding endpoints
+2. `/vlookup` - for ONDC lookup functionality
+
+REQUIRED APACHE CONFIGURATION
+=============================
+Add these proxy rules to your Apache configuration file:
+
+```apache
+# Onboarding endpoints - ADDED FOR ONDC SUBSCRIBE
+ProxyPass /onboarding http://localhost:8000/onboarding
+ProxyPassReverse /onboarding http://localhost:8000/onboarding
+
+# Lookup endpoints - ADDED FOR ONDC LOOKUP
+ProxyPass /vlookup http://localhost:8000/vlookup
+ProxyPassReverse /vlookup http://localhost:8000/vlookup
+```
+
+IMMEDIATE ACTION REQUIRED
+=========================
+1. Find your Apache configuration file:
+   sudo grep -r "neo-server.rozana.in" /etc/apache2/sites-available/
+
+2. Add the missing proxy rules to that file:
+   sudo tee -a /etc/apache2/sites-available/YOUR_FILENAME > /dev/null << 'EOF'
+
+    # Onboarding endpoints - ADDED FOR ONDC SUBSCRIBE
+    ProxyPass /onboarding http://localhost:8000/onboarding
+    ProxyPassReverse /onboarding http://localhost:8000/onboarding
+    
+    # Lookup endpoints - ADDED FOR ONDC LOOKUP
+    ProxyPass /vlookup http://localhost:8000/vlookup
+    ProxyPassReverse /vlookup http://localhost:8000/vlookup
+EOF
+
+3. Test and reload Apache:
+   sudo apache2ctl configtest && sudo systemctl reload apache2
+
+CURRENT STATUS
+==============
+Working Endpoints: 15/17 (88%)
+Failed Endpoints: 2/17 (12%) - /vlookup and all /onboarding/*
+
+The application is very close to being fully functional!
+Only need to fix Apache proxy configuration for /vlookup and /onboarding endpoints. 

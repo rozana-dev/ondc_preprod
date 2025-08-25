@@ -1,0 +1,17 @@
+__pycache__
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.venv
+venv
+env
+.env
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+dist
+build
+node_modules
+coverage.xml
+htmlcov

@@ -1,0 +1,409 @@
+{
+  "info": {
+    "name": "ONDC BAP API Collection",
+    "description": "Complete API collection for ONDC BAP (neo-server.rozana.in)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://neo-server.rozana.in",
+      "type": "string"
+    },
+    {
+      "key": "subscriber_id",
+      "value": "neo-server.rozana.in",
+      "type": "string"
+    },
+    {
+      "key": "domain",
+      "value": "nic2004:52110",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Checks",
+      "item": [
+        {
+          "name": "Health Check (K8s)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/healthz",
+              "host": ["{{base_url}}"],
+              "path": ["healthz"]
+            }
+          }
+        },
+        {
+          "name": "Liveness Probe",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/livez",
+              "host": ["{{base_url}}"],
+              "path": ["livez"]
+            }
+          }
+        },
+        {
+          "name": "Readiness Probe",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/readyz",
+              "host": ["{{base_url}}"],
+              "path": ["readyz"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "ONDC Subscription",
+      "item": [
+        {
+          "name": "Subscription Callback - Challenge",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"challenge\": \"test_challenge_{{$timestamp}}\",\n  \"subscriber_id\": \"{{subscriber_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/on_subscribe",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "on_subscribe"]
+            }
+          }
+        },
+        {
+          "name": "Subscription Callback - Status",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"SUBSCRIBED\",\n  \"subscriber_id\": \"{{subscriber_id}}\",\n  \"timestamp\": \"{{$isoTimestamp}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/on_subscribe",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "on_subscribe"]
+            }
+          }
+        },
+        {
+          "name": "Test Subscription Callback",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bap/on_subscribe/test",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "on_subscribe", "test"]
+            }
+          }
+        },
+        {
+          "name": "Verification Page",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bap/verification",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "verification"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "ONDC Core Actions",
+      "item": [
+        {
+          "name": "Search",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"action\": \"search\",\n    \"version\": \"1.1.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"test-txn-{{$timestamp}}\",\n    \"message_id\": \"test-msg-{{$timestamp}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\"\n  },\n  \"message\": {\n    \"intent\": {\n      \"item\": {\n        \"descriptor\": {\n          \"name\": \"test product\"\n        }\n      }\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/search",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "search"]
+            }
+          }
+        },
+        {
+          "name": "Select",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"action\": \"select\",\n    \"version\": \"1.1.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"test-txn-{{$timestamp}}\",\n    \"message_id\": \"test-msg-{{$timestamp}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\"\n  },\n  \"message\": {\n    \"order\": {\n      \"items\": [\n        {\n          \"id\": \"item_1\",\n          \"quantity\": {\n            \"count\": 1\n          }\n        }\n      ]\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/select",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "select"]
+            }
+          }
+        },
+        {
+          "name": "Init",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"action\": \"init\",\n    \"version\": \"1.1.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"test-txn-{{$timestamp}}\",\n    \"message_id\": \"test-msg-{{$timestamp}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\"\n  },\n  \"message\": {\n    \"order\": {\n      \"billing\": {\n        \"name\": \"John Doe\",\n        \"phone\": \"9876543210\"\n      },\n      \"fulfillments\": [\n        {\n          \"end\": {\n            \"location\": {\n              \"address\": {\n                \"name\": \"Test Address\"\n              }\n            }\n          }\n        }\n      ]\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/init",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "init"]
+            }
+          }
+        },
+        {
+          "name": "Confirm",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"action\": \"confirm\",\n    \"version\": \"1.1.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"test-txn-{{$timestamp}}\",\n    \"message_id\": \"test-msg-{{$timestamp}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\"\n  },\n  \"message\": {\n    \"order\": {\n      \"id\": \"order_{{$timestamp}}\",\n      \"status\": \"Created\"\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/confirm",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "confirm"]
+            }
+          }
+        },
+        {
+          "name": "Status",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"action\": \"status\",\n    \"version\": \"1.1.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"test-txn-{{$timestamp}}\",\n    \"message_id\": \"test-msg-{{$timestamp}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\"\n  },\n  \"message\": {\n    \"order_id\": \"order_123\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/status",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "status"]
+            }
+          }
+        },
+        {
+          "name": "Track",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"action\": \"track\",\n    \"version\": \"1.1.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"test-txn-{{$timestamp}}\",\n    \"message_id\": \"test-msg-{{$timestamp}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\"\n  },\n  \"message\": {\n    \"order_id\": \"order_123\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/track",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "track"]
+            }
+          }
+        },
+        {
+          "name": "Cancel",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"action\": \"cancel\",\n    \"version\": \"1.1.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"test-txn-{{$timestamp}}\",\n    \"message_id\": \"test-msg-{{$timestamp}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\"\n  },\n  \"message\": {\n    \"order_id\": \"order_123\",\n    \"cancellation_reason_id\": \"001\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/cancel",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "cancel"]
+            }
+          }
+        },
+        {
+          "name": "Rating",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"action\": \"rating\",\n    \"version\": \"1.1.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"test-txn-{{$timestamp}}\",\n    \"message_id\": \"test-msg-{{$timestamp}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\"\n  },\n  \"message\": {\n    \"rating_category\": \"Order\",\n    \"id\": \"order_123\",\n    \"value\": \"5\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/rating",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "rating"]
+            }
+          }
+        },
+        {
+          "name": "Support",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"domain\": \"{{domain}}\",\n    \"action\": \"support\",\n    \"version\": \"1.1.0\",\n    \"bap_id\": \"{{subscriber_id}}\",\n    \"bap_uri\": \"{{base_url}}\",\n    \"transaction_id\": \"test-txn-{{$timestamp}}\",\n    \"message_id\": \"test-msg-{{$timestamp}}\",\n    \"timestamp\": \"{{$isoTimestamp}}\"\n  },\n  \"message\": {\n    \"support\": {\n      \"order_id\": \"order_123\",\n      \"issue\": \"Product not delivered\"\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/bap/support",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "support"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "ONDC Onboarding",
+      "item": [
+        {
+          "name": "Get Onboarding Checklist",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bap/onboarding/checklist",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "onboarding", "checklist"]
+            }
+          }
+        },
+        {
+          "name": "Get Registration Payload",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bap/onboarding/registration-payload",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "onboarding", "registration-payload"]
+            }
+          }
+        },
+        {
+          "name": "Register with Registry",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bap/onboarding/register",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "onboarding", "register"]
+            }
+          }
+        },
+        {
+          "name": "Lookup Subscriber",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bap/onboarding/lookup/{{subscriber_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "onboarding", "lookup", "{{subscriber_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Subscriber Status",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bap/onboarding/status/SUBSCRIBED",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "onboarding", "status", "SUBSCRIBED"]
+            }
+          }
+        },
+        {
+          "name": "Get Subscriber Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bap/onboarding/subscriber-info",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bap", "onboarding", "subscriber-info"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

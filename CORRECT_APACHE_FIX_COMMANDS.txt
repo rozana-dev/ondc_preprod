@@ -1,0 +1,117 @@
+CORRECT APACHE FIX COMMANDS FOR ONBOARDING ENDPOINTS
+====================================================
+
+IMPORTANT: These commands will work on your Ubuntu server to fix the onboarding endpoints.
+
+STEP 1: CHECK CURRENT APACHE CONFIGURATION
+==========================================
+# First, let's see what Apache configuration files exist:
+ls -la /etc/apache2/sites-available/
+ls -la /etc/apache2/sites-enabled/
+
+# Check which configuration file is currently active:
+sudo apache2ctl -S
+
+STEP 2: FIND THE CORRECT CONFIGURATION FILE
+===========================================
+# The configuration file might be named differently. Common names:
+# - neo-server.rozana.in.conf
+# - 000-default.conf
+# - default-ssl.conf
+# - your-domain.conf
+
+# Check what's in the sites-available directory:
+sudo ls -la /etc/apache2/sites-available/
+
+# Look for your domain configuration:
+sudo grep -r "neo-server.rozana.in" /etc/apache2/sites-available/
+
+STEP 3: BACKUP CURRENT CONFIGURATION
+====================================
+# Backup the current configuration (replace FILENAME with actual filename):
+sudo cp /etc/apache2/sites-available/FILENAME /etc/apache2/sites-available/FILENAME.backup.$(date +%Y%m%d_%H%M%S)
+
+# Example if your file is named neo-server.rozana.in.conf:
+sudo cp /etc/apache2/sites-available/neo-server.rozana.in.conf /etc/apache2/sites-available/neo-server.rozana.in.conf.backup.$(date +%Y%m%d_%H%M%S)
+
+STEP 4: ADD ONBOARDING PROXY RULES
+==================================
+# Add the onboarding proxy rules to your configuration file:
+# Replace FILENAME with your actual configuration filename
+
+sudo tee -a /etc/apache2/sites-available/FILENAME > /dev/null << 'EOF'
+
+    # Onboarding endpoints - ADDED FOR ONDC SUBSCRIBE
+    ProxyPass /onboarding http://localhost:8000/onboarding
+    ProxyPassReverse /onboarding http://localhost:8000/onboarding
+    
+    # Lookup endpoints - ADDED FOR ONDC LOOKUP
+    ProxyPass /vlookup http://localhost:8000/vlookup
+    ProxyPassReverse /vlookup http://localhost:8000/vlookup
+EOF
+
+STEP 5: TEST AND RELOAD APACHE
+==============================
+# Test the configuration:
+sudo apache2ctl configtest
+
+# If test passes, reload Apache:
+sudo systemctl reload apache2
+
+# If reload fails, restart Apache:
+sudo systemctl restart apache2
+
+STEP 6: VERIFY THE FIX
+======================
+# Test the onboarding endpoints:
+curl -s "https://neo-server.rozana.in/onboarding/subscriber-info"
+curl -s "https://neo-server.rozana.in/onboarding/checklist"
+curl -s "https://neo-server.rozana.in/onboarding/subscribe-payload/pre_prod/1"
+
+# Test the vlookup endpoint:
+curl -s -X POST "https://neo-server.rozana.in/vlookup" -H "Content-Type: application/json" -d '{"test": "data"}'
+
+COMPLETE ONE-LINER COMMANDS
+===========================
+# Command 1: Find your configuration file
+sudo ls -la /etc/apache2/sites-available/ | grep -E "(neo-server|default|ssl)"
+
+# Command 2: Backup and add proxy rules (replace FILENAME with actual filename)
+sudo cp /etc/apache2/sites-available/FILENAME /etc/apache2/sites-available/FILENAME.backup && sudo tee -a /etc/apache2/sites-available/FILENAME > /dev/null << 'EOF'
+
+    # Onboarding endpoints - ADDED FOR ONDC SUBSCRIBE
+    ProxyPass /onboarding http://localhost:8000/onboarding
+    ProxyPassReverse /onboarding http://localhost:8000/onboarding
+    
+    # Lookup endpoints - ADDED FOR ONDC LOOKUP
+    ProxyPass /vlookup http://localhost:8000/vlookup
+    ProxyPassReverse /vlookup http://localhost:8000/vlookup
+EOF
+
+# Command 3: Test and reload
+sudo apache2ctl configtest && sudo systemctl reload apache2
+
+TROUBLESHOOTING
+===============
+# If you get permission errors:
+sudo -i
+
+# If Apache modules are not enabled:
+sudo a2enmod proxy
+sudo a2enmod proxy_http
+sudo systemctl restart apache2
+
+# If the configuration file doesn't exist, create it:
+sudo nano /etc/apache2/sites-available/neo-server.rozana.in.conf
+
+# Check Apache error logs:
+sudo tail -f /var/log/apache2/error.log
+sudo tail -f /var/log/apache2/ondc-bap-error.log
+
+WHAT TO DO IF STILL NOT WORKING
+===============================
+1. Check if FastAPI is running: sudo systemctl status ondc-bap
+2. Check if port 8000 is accessible: sudo netstat -tlnp | grep 8000
+3. Test local endpoints: curl http://localhost:8000/onboarding/subscriber-info
+4. Check Apache configuration: sudo apache2ctl -S
+5. Verify SSL certificates are valid 

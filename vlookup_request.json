@@ -1,0 +1,13 @@
+{
+  "sender_subscriber_id": "neo-server.rozana.in",
+  "request_id": "27baa06d-f90a-486c-85e5-cc621b787f04",
+  "timestamp": "2025-01-21T10:30:00.000Z",
+  "signature": "test_signature_for_demo",
+  "search_parameters": {
+    "country": "IND",
+    "domain": "nic2004:52110",
+    "type": "buyerApp",
+    "city": "011",
+    "subscriber_id": "neo-server.rozana.in"
+  }
+} 

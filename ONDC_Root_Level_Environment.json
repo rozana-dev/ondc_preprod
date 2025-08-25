@@ -1,0 +1,54 @@
+{
+  "id": "ondc-root-level-env",
+  "name": "ONDC Root Level Environment (CORRECTED)",
+  "values": [
+    {
+      "key": "base_url",
+      "value": "https://neo-server.rozana.in",
+      "description": "✅ CORRECT: Root level base URL - all endpoints work here",
+      "enabled": true
+    },
+    {
+      "key": "subscriber_id",
+      "value": "neo-server.rozana.in",
+      "description": "ONDC Subscriber ID",
+      "enabled": true
+    },
+    {
+      "key": "domain",
+      "value": "ONDC:RET10",
+      "description": "ONDC Domain (Retail)",
+      "enabled": true
+    },
+    {
+      "key": "legacy_domain",
+      "value": "nic2004:52110",
+      "description": "Legacy ONDC Domain Code (for older APIs)",
+      "enabled": true
+    },
+    {
+      "key": "transaction_id",
+      "value": "",
+      "description": "Auto-generated UUID v4 transaction ID",
+      "enabled": true
+    },
+    {
+      "key": "preprod_registry",
+      "value": "https://preprod.registry.ondc.org",
+      "description": "Pre-production ONDC Registry",
+      "enabled": true
+    },
+    {
+      "key": "staging_registry",
+      "value": "https://staging.registry.ondc.org",
+      "description": "Staging ONDC Registry",
+      "enabled": true
+    },
+    {
+      "key": "pramaan_url",
+      "value": "https://pramaan.ondc.org",
+      "description": "Pramaan eKYC Service URL",
+      "enabled": true
+    }
+  ]
+}

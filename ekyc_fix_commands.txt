@@ -1,0 +1,32 @@
+# eKYC Endpoints Fix Commands
+# Run these commands on your server as root to fix the eKYC routing issue
+
+# Step 1: Backup current configuration
+cp /etc/apache2/sites-available/ondc-bap.conf /etc/apache2/sites-available/ondc-bap.conf.backup.$(date +%Y%m%d_%H%M%S)
+
+# Step 2: Add eKYC route to Apache config
+echo "" >> /etc/apache2/sites-available/ondc-bap.conf
+echo "    # eKYC endpoints" >> /etc/apache2/sites-available/ondc-bap.conf
+echo "    ProxyPass /ekyc http://localhost:8000/ekyc" >> /etc/apache2/sites-available/ondc-bap.conf
+echo "    ProxyPassReverse /ekyc http://localhost:8000/ekyc" >> /etc/apache2/sites-available/ondc-bap.conf
+
+# Step 3: Test the configuration
+apache2ctl configtest
+
+# Step 4: Reload Apache
+systemctl reload apache2
+
+# Step 5: Test eKYC endpoints
+echo "Testing eKYC health endpoint..."
+curl https://neo-server.rozana.in/ekyc/health
+
+echo ""
+echo "Testing eKYC search endpoint..."
+curl -X POST https://neo-server.rozana.in/ekyc/search -H "Content-Type: application/json" -d '{"test": "data"}'
+
+echo ""
+echo "Testing eKYC verify endpoint..."
+curl -X POST https://neo-server.rozana.in/ekyc/verify -H "Content-Type: application/json" -d '{"test": "data"}'
+
+echo ""
+echo "eKYC endpoints fix completed!" 
