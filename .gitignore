@@ -1,0 +1,16 @@
+# Test reports (keeping only latest)
+api_test_report_*.json
+ondc_test_*.json
+subscribe_request_response_*.json
+pramaan_health_check_*.json
+select_transaction_id_*.txt
+
+# Temporary files
+*.tmp
+*.log
+*.pyc
+__pycache__/
+
+# OS files
+.DS_Store
+Thumbs.db

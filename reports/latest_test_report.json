@@ -1,0 +1,541 @@
+{
+  "summary": {
+    "total_tests": 23,
+    "successful_tests": 16,
+    "failed_tests": 7,
+    "success_rate": 69.56521739130434,
+    "test_timestamp": "2025-08-25T13:13:47.125Z",
+    "transaction_id": "480aa2fe-9b1f-4dce-8e3d-16be0e93c6d0"
+  },
+  "results": [
+    {
+      "endpoint": "/health",
+      "method": "GET",
+      "description": "Main health check",
+      "status_code": 200,
+      "response_time_ms": 192.63,
+      "success": true,
+      "response_size": 2,
+      "timestamp": "2025-08-25T13:13:39.847Z",
+      "response_text": "OK"
+    },
+    {
+      "endpoint": "/ekyc/health",
+      "method": "GET",
+      "description": "eKYC service health",
+      "status_code": 400,
+      "response_time_ms": 132.74,
+      "success": false,
+      "response_size": 27,
+      "timestamp": "2025-08-25T13:13:39.980Z",
+      "error": "HTTP Error 400: Bad Request"
+    },
+    {
+      "endpoint": "/search",
+      "method": "POST",
+      "description": "Search by city - ONDC Contract",
+      "status_code": 200,
+      "response_time_ms": 246.98,
+      "success": true,
+      "response_size": 378,
+      "timestamp": "2025-08-25T13:13:40.227Z",
+      "response_json": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "search",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "480aa2fe-9b1f-4dce-8e3d-16be0e93c6d0",
+          "message_id": "ace0cc67-88d0-49ac-a78a-7756dc1e6dcc",
+          "timestamp": "2025-08-25T13:13:39.980Z",
+          "ttl": "PT30S"
+        },
+        "message": {
+          "ack": {
+            "status": "ACK"
+          }
+        }
+      }
+    },
+    {
+      "endpoint": "/search",
+      "method": "POST",
+      "description": "Search with downloadable link - ONDC Contract",
+      "status_code": 200,
+      "response_time_ms": 204.95,
+      "success": true,
+      "response_size": 378,
+      "timestamp": "2025-08-25T13:13:40.433Z",
+      "response_json": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "search",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "480aa2fe-9b1f-4dce-8e3d-16be0e93c6d0",
+          "message_id": "30d70080-32c0-490d-a1a4-00224a345e90",
+          "timestamp": "2025-08-25T13:13:40.228Z",
+          "ttl": "PT30S"
+        },
+        "message": {
+          "ack": {
+            "status": "ACK"
+          }
+        }
+      }
+    },
+    {
+      "endpoint": "/search",
+      "method": "POST",
+      "description": "Search by item - ONDC Contract",
+      "status_code": 200,
+      "response_time_ms": 190.59,
+      "success": true,
+      "response_size": 378,
+      "timestamp": "2025-08-25T13:13:40.624Z",
+      "response_json": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "search",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "480aa2fe-9b1f-4dce-8e3d-16be0e93c6d0",
+          "message_id": "5303a6ab-c071-4d1c-8481-04b156934920",
+          "timestamp": "2025-08-25T13:13:40.433Z",
+          "ttl": "PT30S"
+        },
+        "message": {
+          "ack": {
+            "status": "ACK"
+          }
+        }
+      }
+    },
+    {
+      "endpoint": "/search",
+      "method": "POST",
+      "description": "Search by location - ONDC Contract",
+      "status_code": 200,
+      "response_time_ms": 203.98,
+      "success": true,
+      "response_size": 378,
+      "timestamp": "2025-08-25T13:13:40.828Z",
+      "response_json": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "search",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "480aa2fe-9b1f-4dce-8e3d-16be0e93c6d0",
+          "message_id": "1fa0c1a3-b417-42f4-92b7-cac478cb77d7",
+          "timestamp": "2025-08-25T13:13:40.624Z",
+          "ttl": "PT30S"
+        },
+        "message": {
+          "ack": {
+            "status": "ACK"
+          }
+        }
+      }
+    },
+    {
+      "endpoint": "/search",
+      "method": "POST",
+      "description": "Incremental catalog refresh - ONDC Contract",
+      "status_code": 200,
+      "response_time_ms": 223.48,
+      "success": true,
+      "response_size": 372,
+      "timestamp": "2025-08-25T13:13:41.052Z",
+      "response_json": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "*",
+          "action": "search",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "480aa2fe-9b1f-4dce-8e3d-16be0e93c6d0",
+          "message_id": "7dff111a-403e-4952-8341-d211a7bdd162",
+          "timestamp": "2025-08-25T13:13:40.829Z",
+          "ttl": "PT30S"
+        },
+        "message": {
+          "ack": {
+            "status": "ACK"
+          }
+        }
+      }
+    },
+    {
+      "endpoint": "/select",
+      "method": "POST",
+      "description": "Item selection",
+      "status_code": 200,
+      "response_time_ms": 181.41,
+      "success": true,
+      "response_size": 493,
+      "timestamp": "2025-08-25T13:13:41.234Z",
+      "response_json": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "select",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "480aa2fe-9b1f-4dce-8e3d-16be0e93c6d0",
+          "message_id": "61447fde-147f-43ae-a21e-d04fec75920a",
+          "timestamp": "2025-08-25T13:13:41.053Z",
+          "ttl": "PT30S",
+          "bpp_id": "pramaan.ondc.org/beta/preprod/mock/seller",
+          "bpp_uri": "https://pramaan.ondc.org/beta/preprod/mock/seller"
+        },
+        "message": {
+          "ack": {
+            "status": "ACK"
+          }
+        }
+      }
+    },
+    {
+      "endpoint": "/init",
+      "method": "POST",
+      "description": "Order initialization",
+      "status_code": 200,
+      "response_time_ms": 189.59,
+      "success": true,
+      "response_size": 491,
+      "timestamp": "2025-08-25T13:13:41.425Z",
+      "response_json": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "init",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "480aa2fe-9b1f-4dce-8e3d-16be0e93c6d0",
+          "message_id": "56aff254-abac-476c-8aa3-dd2bcbdae484",
+          "timestamp": "2025-08-25T13:13:41.235Z",
+          "ttl": "PT30S",
+          "bpp_id": "pramaan.ondc.org/beta/preprod/mock/seller",
+          "bpp_uri": "https://pramaan.ondc.org/beta/preprod/mock/seller"
+        },
+        "message": {
+          "ack": {
+            "status": "ACK"
+          }
+        }
+      }
+    },
+    {
+      "endpoint": "/confirm",
+      "method": "POST",
+      "description": "Order confirmation",
+      "status_code": 200,
+      "response_time_ms": 164.11,
+      "success": true,
+      "response_size": 494,
+      "timestamp": "2025-08-25T13:13:41.590Z",
+      "response_json": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "confirm",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "480aa2fe-9b1f-4dce-8e3d-16be0e93c6d0",
+          "message_id": "f37de40f-fe66-431c-ae3b-9456b600f703",
+          "timestamp": "2025-08-25T13:13:41.425Z",
+          "ttl": "PT30S",
+          "bpp_id": "pramaan.ondc.org/beta/preprod/mock/seller",
+          "bpp_uri": "https://pramaan.ondc.org/beta/preprod/mock/seller"
+        },
+        "message": {
+          "ack": {
+            "status": "ACK"
+          }
+        }
+      }
+    },
+    {
+      "endpoint": "/status",
+      "method": "POST",
+      "description": "Order status",
+      "status_code": 200,
+      "response_time_ms": 3637.74,
+      "success": true,
+      "response_size": 493,
+      "timestamp": "2025-08-25T13:13:45.228Z",
+      "response_json": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "status",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "480aa2fe-9b1f-4dce-8e3d-16be0e93c6d0",
+          "message_id": "41b2032b-2b1b-423a-b5df-03f12f00e771",
+          "timestamp": "2025-08-25T13:13:41.590Z",
+          "ttl": "PT30S",
+          "bpp_id": "pramaan.ondc.org/beta/preprod/mock/seller",
+          "bpp_uri": "https://pramaan.ondc.org/beta/preprod/mock/seller"
+        },
+        "message": {
+          "ack": {
+            "status": "ACK"
+          }
+        }
+      }
+    },
+    {
+      "endpoint": "/track",
+      "method": "POST",
+      "description": "Order tracking",
+      "status_code": 200,
+      "response_time_ms": 193.57,
+      "success": true,
+      "response_size": 492,
+      "timestamp": "2025-08-25T13:13:45.422Z",
+      "response_json": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "track",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "480aa2fe-9b1f-4dce-8e3d-16be0e93c6d0",
+          "message_id": "105add0f-3935-498f-ba69-c8ba24eade83",
+          "timestamp": "2025-08-25T13:13:45.228Z",
+          "ttl": "PT30S",
+          "bpp_id": "pramaan.ondc.org/beta/preprod/mock/seller",
+          "bpp_uri": "https://pramaan.ondc.org/beta/preprod/mock/seller"
+        },
+        "message": {
+          "ack": {
+            "status": "ACK"
+          }
+        }
+      }
+    },
+    {
+      "endpoint": "/cancel",
+      "method": "POST",
+      "description": "Order cancellation",
+      "status_code": 200,
+      "response_time_ms": 202.09,
+      "success": true,
+      "response_size": 493,
+      "timestamp": "2025-08-25T13:13:45.625Z",
+      "response_json": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "cancel",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "480aa2fe-9b1f-4dce-8e3d-16be0e93c6d0",
+          "message_id": "920c49dd-5804-44f2-8946-80593d9af2b6",
+          "timestamp": "2025-08-25T13:13:45.422Z",
+          "ttl": "PT30S",
+          "bpp_id": "pramaan.ondc.org/beta/preprod/mock/seller",
+          "bpp_uri": "https://pramaan.ondc.org/beta/preprod/mock/seller"
+        },
+        "message": {
+          "ack": {
+            "status": "ACK"
+          }
+        }
+      }
+    },
+    {
+      "endpoint": "/update",
+      "method": "POST",
+      "description": "Order update",
+      "status_code": 200,
+      "response_time_ms": 159.89,
+      "success": true,
+      "response_size": 563,
+      "timestamp": "2025-08-25T13:13:45.785Z",
+      "response_json": {
+        "context": {
+          "domain": "ONDC:RET10",
+          "country": "IND",
+          "city": "std:011",
+          "action": "update",
+          "core_version": "1.2.0",
+          "bap_id": "neo-server.rozana.in",
+          "bap_uri": "https://neo-server.rozana.in",
+          "transaction_id": "480aa2fe-9b1f-4dce-8e3d-16be0e93c6d0",
+          "message_id": "199a6fd3-75c5-4096-819e-ecf7ec43f2bf",
+          "timestamp": "2025-08-25T13:13:45.625Z",
+          "ttl": "PT30S",
+          "bpp_id": "pramaan.ondc.org/beta/preprod/mock/seller",
+          "bpp_uri": "https://pramaan.ondc.org/beta/preprod/mock/seller"
+        },
+        "message": {
+          "ack": {
+            "status": "NACK"
+          }
+        },
+        "error": {
+          "code": "30000",
+          "message": "\"order.status\" is not allowed"
+        }
+      }
+    },
+    {
+      "endpoint": "/ekyc/search",
+      "method": "POST",
+      "description": "eKYC provider search",
+      "status_code": 400,
+      "response_time_ms": 139.68,
+      "success": false,
+      "response_size": 27,
+      "timestamp": "2025-08-25T13:13:45.925Z",
+      "error": "HTTP Error 400: Bad Request"
+    },
+    {
+      "endpoint": "/ekyc/select",
+      "method": "POST",
+      "description": "eKYC service selection",
+      "status_code": 400,
+      "response_time_ms": 161.3,
+      "success": false,
+      "response_size": 27,
+      "timestamp": "2025-08-25T13:13:46.087Z",
+      "error": "HTTP Error 400: Bad Request"
+    },
+    {
+      "endpoint": "/ekyc/initiate",
+      "method": "POST",
+      "description": "eKYC initiation",
+      "status_code": 400,
+      "response_time_ms": 145.67,
+      "success": false,
+      "response_size": 27,
+      "timestamp": "2025-08-25T13:13:46.233Z",
+      "error": "HTTP Error 400: Bad Request"
+    },
+    {
+      "endpoint": "/ekyc/verify",
+      "method": "POST",
+      "description": "Document verification",
+      "status_code": 400,
+      "response_time_ms": 133.03,
+      "success": false,
+      "response_size": 27,
+      "timestamp": "2025-08-25T13:13:46.367Z",
+      "error": "HTTP Error 400: Bad Request"
+    },
+    {
+      "endpoint": "/ekyc/status",
+      "method": "POST",
+      "description": "Verification status",
+      "status_code": 400,
+      "response_time_ms": 147.3,
+      "success": false,
+      "response_size": 27,
+      "timestamp": "2025-08-25T13:13:46.515Z",
+      "error": "HTTP Error 400: Bad Request"
+    },
+    {
+      "endpoint": "/on_subscribe",
+      "method": "POST",
+      "description": "Registry subscription callback",
+      "status_code": 200,
+      "response_time_ms": 164.08,
+      "success": true,
+      "response_size": 96,
+      "timestamp": "2025-08-25T13:13:46.679Z",
+      "response_json": {
+        "message": {
+          "ack": {
+            "status": "NACK"
+          }
+        },
+        "error": {
+          "code": "404",
+          "message": "No Such Route Supported"
+        }
+      }
+    },
+    {
+      "endpoint": "/vlookup",
+      "method": "GET",
+      "description": "Participant lookup",
+      "status_code": 400,
+      "response_time_ms": 133.29,
+      "success": false,
+      "response_size": 27,
+      "timestamp": "2025-08-25T13:13:46.813Z",
+      "error": "HTTP Error 400: Bad Request"
+    },
+    {
+      "endpoint": "/rating",
+      "method": "POST",
+      "description": "Order rating",
+      "status_code": 200,
+      "response_time_ms": 157.64,
+      "success": true,
+      "response_size": 96,
+      "timestamp": "2025-08-25T13:13:46.971Z",
+      "response_json": {
+        "message": {
+          "ack": {
+            "status": "NACK"
+          }
+        },
+        "error": {
+          "code": "404",
+          "message": "No Such Route Supported"
+        }
+      }
+    },
+    {
+      "endpoint": "/support",
+      "method": "POST",
+      "description": "Customer support",
+      "status_code": 200,
+      "response_time_ms": 153.98,
+      "success": true,
+      "response_size": 96,
+      "timestamp": "2025-08-25T13:13:47.125Z",
+      "response_json": {
+        "message": {
+          "ack": {
+            "status": "NACK"
+          }
+        },
+        "error": {
+          "code": "404",
+          "message": "No Such Route Supported"
+        }
+      }
+    }
+  ]
+}
